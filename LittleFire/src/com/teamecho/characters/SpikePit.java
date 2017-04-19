@@ -25,11 +25,11 @@ public class SpikePit {
     
     private BufferedImage sprite; //This image represents the spike pit
     
-    public SpikePit()
+    public SpikePit(int newX, int newY)
     {
         //Starting X and Y coordinates
-        x = 400;
-        y = 500;
+        x = newX;
+        y = newY;
 
         damage = 5;
         isVisible = true;
