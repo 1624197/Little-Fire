@@ -23,6 +23,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.MouseInfo;
 
 public class StartGamePanel extends JPanel implements MouseListener {
 
@@ -70,25 +71,30 @@ public class StartGamePanel extends JPanel implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-            game.playGame();
+            if (e.getX() > thebutton.getX() && e.getX() < (thebutton.getX() + thebutton.getSpriteWidth())) {
+                if (e.getY() > thebutton.getY() && e.getY() < (thebutton.getY() + thebutton.getSpriteHeight())) {
+                    game.playGame();
+                }
+            }
+
         }
 
     }
 
     @Override
-    public void mousePressed(MouseEvent me) {
+    public void mousePressed(MouseEvent e) {
     }
 
     @Override
-    public void mouseReleased(MouseEvent me) {
+    public void mouseReleased(MouseEvent e) {
     }
 
     @Override
-    public void mouseEntered(MouseEvent me) {
+    public void mouseEntered(MouseEvent e) {
     }
 
     @Override
-    public void mouseExited(MouseEvent me) {
+    public void mouseExited(MouseEvent e) {
 
     }
 }
