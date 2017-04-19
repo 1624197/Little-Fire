@@ -48,17 +48,15 @@ public class Level1 extends JPanel implements ActionListener {
     private Enemy[] enemies;
     private SpikePit theSpikePit;
 
-    int VIEWPORT_SIZE_Y;
-    int VIEWPORT_SIZE_X;
-    int offsetMaxX = 3600 - VIEWPORT_SIZE_X;
-    int offsetMaxY = 600 - VIEWPORT_SIZE_Y;
+    int VIEWPORT_SIZE_X=600;
+    int VIEWPORT_SIZE_Y=800;
+    int offsetMaxX = 2048 - VIEWPORT_SIZE_X/2;
     int offsetMinX = 0;
-    int offsetMinY = 0;
     int camX = 0;
     int camY = 0;
 
     public int CurrentCollisionDelay = 0;
-    public int MaxCollisionDelay = 15;
+    public int MaxCollisionDelay = 30;
 
     private final int NUMBER_OF_ENEMIES = 3;
     private final int NUMBER_OF_EMBERS = 5;
@@ -73,7 +71,7 @@ public class Level1 extends JPanel implements ActionListener {
         embers = new Ember[NUMBER_OF_EMBERS];
         enemies = new Enemy[NUMBER_OF_ENEMIES];
         theSpikePit = new SpikePit();
-        theSpikePit.setY(GroundLevel - (theSpikePit.getSpriteHeight() / 2));
+        theSpikePit.setY(GroundLevel);
         Random rand = new Random();
 
         int emberX, emberY; // X and Y coordinates for the collectables
@@ -112,7 +110,7 @@ public class Level1 extends JPanel implements ActionListener {
         setDoubleBuffered(true);
 
         try {
-            background = ImageIO.read(getClass().getResource("/Images/level1_background_extended.png"));
+            background = ImageIO.read(getClass().getResource("/Images/level1_background.png"));
         } catch (Exception ex) {
             System.err.println("Error loading Level 1 background image");
         }
@@ -134,8 +132,8 @@ public class Level1 extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.translate(-camX / 2, -camY / 2);
-
+        
+        g.translate(-camX, 0);
         //Draw Background
         g.drawImage(background, 0, 0, null);
         //Draw Obsticles
@@ -166,8 +164,8 @@ public class Level1 extends JPanel implements ActionListener {
         Font uiFont = new Font("Arial", Font.PLAIN, 14);
         g.setColor(Color.black);
         g.setFont(uiFont);
-        g.drawString("Score: " + score, 10, 20);
-        g.drawString("Health " + health + "/100", 10, 35);
+        g.drawString("Score: " + score, camX, 20);
+        g.drawString("Health " + health + "/100", camX, 35);
 
         g.dispose();
     }
@@ -304,10 +302,7 @@ public class Level1 extends JPanel implements ActionListener {
             camX = offsetMaxX;
         } else if (camX < offsetMinX) {
             camX = offsetMinX;
-        } else if (camY < offsetMinY) {
-            camY = offsetMinY;
-        } else if (camY > offsetMaxY) {
-            camY = offsetMaxY;
         }
+        
     }
 }
