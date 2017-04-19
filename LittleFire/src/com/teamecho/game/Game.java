@@ -20,7 +20,8 @@ public class Game {
 
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 600;
-
+    public final int Level1_Height= 800;
+    public final int Level1_Width = 2048;
     private final String Title = "Little Fire";
 
     private int lastGameScore = 0;
@@ -48,7 +49,7 @@ public class Game {
         startScreen = new StartGamePanel(this);
         startScreen.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         lvl1 = new Level1(this);
-        lvl1.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        lvl1.setPreferredSize(new Dimension(Level1_Width, Level1_Height));
 
         // This will add a start Screen to the Main Window
         gameWindow.getContentPane().add(startScreen, "INTRO");

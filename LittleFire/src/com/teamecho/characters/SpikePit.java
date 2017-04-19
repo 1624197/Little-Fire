@@ -29,7 +29,7 @@ public class SpikePit {
     {
         //Starting X and Y coordinates
         x = 400;
-        y = 480;
+        y = 500;
 
         damage = 5;
         isVisible = true;
