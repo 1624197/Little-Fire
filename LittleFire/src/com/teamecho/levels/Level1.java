@@ -57,10 +57,13 @@ public class Level1 extends JPanel implements ActionListener {
     int camX = 0;
     int camY = 0;
 
+    public int CurrentCollisionDelay = 0;
+    public int MaxCollisionDelay = 15;
+
     private final int NUMBER_OF_ENEMIES = 3;
     private final int NUMBER_OF_EMBERS = 5;
 
-    private final int GroundLevel =520;
+    private final int GroundLevel = 520;
 
     public Level1(Game theGame) {
 
@@ -70,7 +73,7 @@ public class Level1 extends JPanel implements ActionListener {
         embers = new Ember[NUMBER_OF_EMBERS];
         enemies = new Enemy[NUMBER_OF_ENEMIES];
         theSpikePit = new SpikePit();
-        theSpikePit.setY(GroundLevel-(theSpikePit.getSpriteHeight()/2));
+        theSpikePit.setY(GroundLevel - (theSpikePit.getSpriteHeight() / 2));
         Random rand = new Random();
 
         int emberX, emberY; // X and Y coordinates for the collectables
@@ -131,7 +134,6 @@ public class Level1 extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         g.translate(-camX / 2, -camY / 2);
 
         //Draw Background
@@ -164,7 +166,7 @@ public class Level1 extends JPanel implements ActionListener {
         Font uiFont = new Font("Arial", Font.PLAIN, 14);
         g.setColor(Color.black);
         g.setFont(uiFont);
-        g.drawString("Score: " + score, 10, 15);
+        g.drawString("Score: " + score, 10, 20);
         g.drawString("Health " + health + "/100", 10, 35);
 
         g.dispose();
@@ -183,40 +185,38 @@ public class Level1 extends JPanel implements ActionListener {
             thePlayer.Land();
             thePlayer.setY(GroundLevel);
         }
+        
+            // Check to see if the player boundary (rectangle) intersects
+            // with the ember boundary (i.e. there is a collision)
+            for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+                if (embers[i].getVisible() == true) {
+                    currentEmberBounds = embers[i].getBounds();
 
-        // Check to see if the player boundary (rectangle) intersects
-        // with the ember boundary (i.e. there is a collision)
-        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            if (embers[i].getVisible() == true) {
-                currentEmberBounds = embers[i].getBounds();
-
-                if (playerBounds.intersects(currentEmberBounds) == true) {
-                    score += embers[i].getScore();
-                    embers[i].setVisible(false);
+                    if (playerBounds.intersects(currentEmberBounds) == true) {
+                        score += embers[i].getScore();
+                        embers[i].setVisible(false);
+                    }
                 }
             }
-        }
 
-        //Check to see if the player interacts with the monster
-        //Widthdraw score (health) if we do... 
-        // This will work very quickly -- implement a cool down counter 
-        // to avoid losing instantly!
-        for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            currentEnemyBounds = enemies[j].getBounds();
+            if (CurrentCollisionDelay <= 0) {
+            for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
+                currentEnemyBounds = enemies[j].getBounds();
 
-            if (enemies[j].getVisible() == true) {
-                if (playerBounds.intersects(currentEnemyBounds)) {
+                if (enemies[j].getVisible() == true) {
+                    if (playerBounds.intersects(currentEnemyBounds)) {
+                        health -= 5;
+                    }
+                }
+
+            }
+
+            if (theSpikePit.getVisible() == true) {
+                if (playerBounds.intersects(SpikePitBounds)) {
                     health -= 5;
                 }
             }
-
-        }
-
-        //Check player collision with Spike Pit
-        if (theSpikePit.getVisible() == true) {
-            if (playerBounds.intersects(SpikePitBounds)) {
-                health -= 5;
-            }
+            CurrentCollisionDelay=MaxCollisionDelay;
         }
     }
 
@@ -247,6 +247,9 @@ public class Level1 extends JPanel implements ActionListener {
         doMovement();
         checkCollisions();
         repaint();
+        if (CurrentCollisionDelay > 0) {
+            CurrentCollisionDelay--;
+        }
     }
 
     /**
@@ -294,18 +297,17 @@ public class Level1 extends JPanel implements ActionListener {
     }
 
     private void DoCameraMove() {
-        camX = thePlayer.getX() - VIEWPORT_SIZE_Y / 2;
+        camX = thePlayer.getX() - VIEWPORT_SIZE_X / 2;
         camY = thePlayer.getY() - VIEWPORT_SIZE_Y / 2;
 
         if (camX > offsetMaxX) {
             camX = offsetMaxX;
         } else if (camX < offsetMinX) {
             camX = offsetMinX;
-            if (camY > offsetMaxY) {
-                camY = offsetMaxY;
-            }
         } else if (camY < offsetMinY) {
             camY = offsetMinY;
+        } else if (camY > offsetMaxY) {
+            camY = offsetMaxY;
         }
     }
 }

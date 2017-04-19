@@ -1,5 +1,6 @@
 package com.teamecho.game.objects;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
@@ -9,7 +10,7 @@ import javax.imageio.ImageIO;
  */
 public class StartGameButton {
 
-   public StartGameButton() {
+    public StartGameButton() {
         //Starting X and Y coordinates
         x = 10;
         y = 10;
@@ -33,6 +34,9 @@ public class StartGameButton {
         }
         //getSpriteWidth and getSpriteHeight are used to let other classes access the 
         //width and height of the character
+
+        spriteWidth = sprite.getWidth();
+        spriteHeight = sprite.getHeight();
     }
 
     public int getSpriteWidth() {
@@ -70,5 +74,9 @@ public class StartGameButton {
      */
     public BufferedImage getSprite() {
         return sprite;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, spriteWidth, spriteHeight);
     }
 }
