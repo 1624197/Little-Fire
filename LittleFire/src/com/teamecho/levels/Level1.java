@@ -50,7 +50,7 @@ public class Level1 extends JPanel implements ActionListener {
 
     int VIEWPORT_SIZE_Y;
     int VIEWPORT_SIZE_X;
-    int offsetMaxX = 800 - VIEWPORT_SIZE_X;
+    int offsetMaxX = 3600 - VIEWPORT_SIZE_X;
     int offsetMaxY = 600 - VIEWPORT_SIZE_Y;
     int offsetMinX = 0;
     int offsetMinY = 0;
@@ -112,7 +112,7 @@ public class Level1 extends JPanel implements ActionListener {
         setDoubleBuffered(true);
 
         try {
-            background = ImageIO.read(getClass().getResource("/Images/level1_background.png"));
+            background = ImageIO.read(getClass().getResource("/Images/level1_background_extended.png"));
         } catch (Exception ex) {
             System.err.println("Error loading Level 1 background image");
         }
