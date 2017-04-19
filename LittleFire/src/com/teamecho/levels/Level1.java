@@ -46,7 +46,7 @@ public class Level1 extends JPanel implements ActionListener {
     private Player thePlayer;
     private Ember[] embers;
     private Enemy[] enemies;
-    private SpikePit theSpikePit;
+    private SpikePit[] spikepit;
 
     int VIEWPORT_SIZE_X=600;
     int VIEWPORT_SIZE_Y=800;
@@ -58,8 +58,9 @@ public class Level1 extends JPanel implements ActionListener {
     public int CurrentCollisionDelay = 0;
     public int MaxCollisionDelay = 30;
 
-    private final int NUMBER_OF_ENEMIES = 3;
+    private final int NUMBER_OF_ENEMIES = 15;
     private final int NUMBER_OF_EMBERS = 5;
+    private final int NUMBER_OF_SPIKEPITS = 10;   
 
     private final int GroundLevel = 520;
 
@@ -70,12 +71,12 @@ public class Level1 extends JPanel implements ActionListener {
         thePlayer.setY(GroundLevel);
         embers = new Ember[NUMBER_OF_EMBERS];
         enemies = new Enemy[NUMBER_OF_ENEMIES];
-        theSpikePit = new SpikePit();
-        theSpikePit.setY(GroundLevel);
+        spikepit = new SpikePit[NUMBER_OF_SPIKEPITS];
         Random rand = new Random();
 
         int emberX, emberY; // X and Y coordinates for the collectables
         int enemyX, enemyY; // X and Y coordinates for the enemies
+        int spikepitX, spikepitY; // X and Y coordinates for the spike pits
 
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
@@ -90,10 +91,18 @@ public class Level1 extends JPanel implements ActionListener {
 
         // Initialise all Monster Objects
         for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemyX = rand.nextInt(600) + 1;
-            enemyY = rand.nextInt(400) + 1;
+            enemyX = rand.nextInt(3600) + 1;
+            enemyY = rand.nextInt(600) + 1;
 
             enemies[j] = new Enemy(enemyX, enemyY);
+        }
+
+        // Initialise all Spike Pits
+        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
+            spikepitX = rand.nextInt(3600) + 1;
+            spikepitY = (GroundLevel - 33);
+
+            spikepit[k] = new SpikePit(spikepitX, spikepitY);
         }
 
         init();
@@ -156,9 +165,12 @@ public class Level1 extends JPanel implements ActionListener {
         }
 
         //Draw Spike Pits on screen
-        if (theSpikePit.getVisible() == true) {
-            g.drawImage(theSpikePit.getSprite(), theSpikePit.getX(), theSpikePit.getY(), null);
+        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++)
+        {
+            g.drawImage(spikepit[k].getSprite(), spikepit[k].getX(), spikepit[k].getY(), null);
         }
+        
+        
 
         //Code to draw the score and health on screen
         Font uiFont = new Font("Arial", Font.PLAIN, 14);
@@ -177,7 +189,8 @@ public class Level1 extends JPanel implements ActionListener {
         Rectangle playerBounds = thePlayer.getBounds();
         Rectangle currentEmberBounds; //this variable will be updated with the bounds of each ember in a loop
         Rectangle currentEnemyBounds;
-        Rectangle SpikePitBounds = theSpikePit.getBounds();
+        Rectangle currentSpikePitBounds;
+
 
         if (thePlayer.getY() > GroundLevel) {
             thePlayer.Land();
@@ -209,15 +222,18 @@ public class Level1 extends JPanel implements ActionListener {
 
             }
 
-            if (theSpikePit.getVisible() == true) {
-                if (playerBounds.intersects(SpikePitBounds)) {
-                    health -= 5;
+            for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
+                currentSpikePitBounds = spikepit[k].getBounds();
+
+                if (spikepit[k].getVisible() == true) {
+                    if (playerBounds.intersects(currentSpikePitBounds)) {
+                        health -= 5;
                 }
             }
             CurrentCollisionDelay=MaxCollisionDelay;
         }
     }
-
+    }
     /**
      * This method calls the movement methods on characters and NPCs
      */
@@ -225,7 +241,7 @@ public class Level1 extends JPanel implements ActionListener {
         thePlayer.updateMove();
 
         for (int i = 0; i < NUMBER_OF_ENEMIES; i++) {
-            enemies[i].move(600, 600); //move within the bounds of the game level
+            enemies[i].move(3600, 600); //move within the bounds of the game level
         }
     }
 
