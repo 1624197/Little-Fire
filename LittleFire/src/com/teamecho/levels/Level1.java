@@ -59,7 +59,7 @@ public class Level1 extends JPanel implements ActionListener {
     public int MaxCollisionDelay = 30;
 
     private final int NUMBER_OF_ENEMIES = 15;
-    private final int NUMBER_OF_EMBERS = 5;
+    private final int NUMBER_OF_EMBERS = 15;
     private final int NUMBER_OF_SPIKEPITS = 10;   
 
     private final int GroundLevel = 520;
@@ -80,8 +80,8 @@ public class Level1 extends JPanel implements ActionListener {
 
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            emberX = rand.nextInt(800) + 1; // pick a random X coordinate
-            emberY = rand.nextInt(600) + 1; // pick a random Y coorinate
+            emberX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
+            emberY = rand.nextInt(GroundLevel) + 1; // pick a random Y coorinate
 
             // Use the overloaded ember constructor to create a new
             // ember object with the X and Y coordinates selected
@@ -91,17 +91,17 @@ public class Level1 extends JPanel implements ActionListener {
 
         // Initialise all Monster Objects
         for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemyX = rand.nextInt(3600) + 1;
-            enemyY = rand.nextInt(600) + 1;
+            enemyX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
+            enemyY = rand.nextInt(GroundLevel) + 1;
 
             enemies[j] = new Enemy(enemyX, enemyY);
         }
 
         // Initialise all Spike Pits
         for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-            spikepitX = rand.nextInt(3600) + 1;
+            spikepitX = rand.nextInt(3600) + (thePlayer.getX() + 20); //will ensure that the spike pit cannot spawn under the player start position
             spikepitY = (GroundLevel - 33);
-
+            
             spikepit[k] = new SpikePit(spikepitX, spikepitY);
         }
 
