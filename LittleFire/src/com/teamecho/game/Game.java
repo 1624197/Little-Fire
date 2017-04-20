@@ -21,7 +21,7 @@ public class Game {
     private final int WINDOW_WIDTH = 800;
     private final int WINDOW_HEIGHT = 600;
     public final int Level1_Height= 800;
-    public final int Level1_Width = 2048;
+    public final int Level1_Width = 3600;
     private final String Title = "Little Fire";
 
     private int lastGameScore = 0;
