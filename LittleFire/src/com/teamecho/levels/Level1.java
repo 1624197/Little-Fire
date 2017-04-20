@@ -50,7 +50,7 @@ public class Level1 extends JPanel implements ActionListener {
 
     int VIEWPORT_SIZE_X=600;
     int VIEWPORT_SIZE_Y=800;
-    int offsetMaxX = 2048 - VIEWPORT_SIZE_X/2;
+    int offsetMaxX = 3600 - VIEWPORT_SIZE_X/2;
     int offsetMinX = 0;
     int camX = 0;
     int camY = 0;
@@ -178,7 +178,7 @@ public class Level1 extends JPanel implements ActionListener {
         g.setFont(uiFont);
         g.drawString("Score: " + score, camX, 20);
         g.drawString("Health " + health + "/100", camX, 35);
-
+        g.drawString("PlayerX " + thePlayer.getX() , camX, 50);
         g.dispose();
     }
 

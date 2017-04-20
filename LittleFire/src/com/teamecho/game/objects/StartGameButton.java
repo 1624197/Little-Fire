@@ -12,8 +12,8 @@ public class StartGameButton {
 
     public StartGameButton() {
         //Starting X and Y coordinates
-        x = 10;
-        y = 10;
+        x = 100;
+        y = 300;
         initButton();
     }
 

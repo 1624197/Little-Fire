@@ -42,7 +42,7 @@ public class StartGamePanel extends JPanel implements MouseListener {
 
         //Load the background image
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/Images/MainMenuBackground.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("/Images/StartMenu.png"));
         } catch (Exception ex) {
             System.err.println("Error Loading Start Game Image");
         }
