@@ -211,7 +211,7 @@ public class Level1 extends JPanel implements ActionListener {
 
                 if (enemies[j].getVisible() == true) {
                     if (playerBounds.intersects(currentEnemyBounds)) {
-                        health -= 5;
+                        DamagePlayer(5);
                     }
                 }
 
@@ -222,7 +222,7 @@ public class Level1 extends JPanel implements ActionListener {
 
                 if (spikepit[k].getVisible() == true) {
                     if (playerBounds.intersects(currentSpikePitBounds)) {
-                        health -= 5;
+                        DamagePlayer(5);
                     }
                 }
                 CurrentCollisionDelay = MaxCollisionDelay;
@@ -330,5 +330,12 @@ public class Level1 extends JPanel implements ActionListener {
             camX = offsetMinX;
         }
 
+    }
+    private void DamagePlayer(int Damage) {
+        health-=Damage;
+        if (health<=0){
+            game.SelectScreen(5);
+        }
+        
     }
 }
