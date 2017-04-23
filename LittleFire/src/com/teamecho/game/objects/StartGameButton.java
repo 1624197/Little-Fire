@@ -13,7 +13,7 @@ public class StartGameButton {
     public StartGameButton() {
         //Starting X and Y coordinates
         x = 100;
-        y = 200;
+        y = 300;
         initButton();
     }
 
@@ -30,7 +30,7 @@ public class StartGameButton {
         try {
             sprite = ImageIO.read(getClass().getResource("/Images/Objects/StartGameButton.png"));
         } catch (Exception ex) {
-            System.err.println("Error loading player sprite");
+            System.err.println("Error loading start button image");
         }
         //getSpriteWidth and getSpriteHeight are used to let other classes access the 
         //width and height of the button
