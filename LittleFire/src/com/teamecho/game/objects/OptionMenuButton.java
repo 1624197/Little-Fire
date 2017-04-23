@@ -12,8 +12,8 @@ public class OptionMenuButton {
 
     public OptionMenuButton() {
         //Starting X and Y coordinates
-        x = 100;
-        y = 400;
+        x = 500;
+        y = 300;
         initButton();
     }
 
@@ -30,7 +30,7 @@ public class OptionMenuButton {
         try {
             sprite = ImageIO.read(getClass().getResource("/Images/Objects/OptionMenuButton.png"));
         } catch (Exception ex) {
-            System.err.println("Error loading player sprite");
+            System.err.println("Error loading options button");
         }
         //getSpriteWidth and getSpriteHeight are used to let other classes access the 
         //width and height of the button
