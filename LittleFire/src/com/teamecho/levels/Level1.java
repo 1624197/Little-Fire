@@ -48,9 +48,8 @@ public class Level1 extends JPanel implements ActionListener {
     private Enemy[] enemies;
     private SpikePit[] spikepit;
 
-    int VIEWPORT_SIZE_X=600;
-    int VIEWPORT_SIZE_Y=800;
-    int offsetMaxX = 3600 - VIEWPORT_SIZE_X/2;
+    int VIEWPORT_SIZE_X = 800;
+    int offsetMaxX = 3600 - VIEWPORT_SIZE_X;
     int offsetMinX = 0;
     int camX = 0;
     int camY = 0;
@@ -60,7 +59,7 @@ public class Level1 extends JPanel implements ActionListener {
 
     private final int NUMBER_OF_ENEMIES = 15;
     private final int NUMBER_OF_EMBERS = 15;
-    private final int NUMBER_OF_SPIKEPITS = 10;   
+    private final int NUMBER_OF_SPIKEPITS = 10;
 
     private final int GroundLevel = 520;
 
@@ -101,7 +100,7 @@ public class Level1 extends JPanel implements ActionListener {
         for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
             spikepitX = rand.nextInt(3600) + (thePlayer.getX() + 20); //will ensure that the spike pit cannot spawn under the player start position
             spikepitY = (GroundLevel - 33);
-            
+
             spikepit[k] = new SpikePit(spikepitX, spikepitY);
         }
 
@@ -119,7 +118,7 @@ public class Level1 extends JPanel implements ActionListener {
         setDoubleBuffered(true);
 
         try {
-            background = ImageIO.read(getClass().getResource("/Images/level1_background.png"));
+            background = ImageIO.read(getClass().getResource("/Images/Screens/level1_background.png"));
         } catch (Exception ex) {
             System.err.println("Error loading Level 1 background image");
         }
@@ -141,7 +140,7 @@ public class Level1 extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         g.translate(-camX, 0);
         //Draw Background
         g.drawImage(background, 0, 0, null);
@@ -165,12 +164,9 @@ public class Level1 extends JPanel implements ActionListener {
         }
 
         //Draw Spike Pits on screen
-        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++)
-        {
+        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
             g.drawImage(spikepit[k].getSprite(), spikepit[k].getX(), spikepit[k].getY(), null);
         }
-        
-        
 
         //Code to draw the score and health on screen
         Font uiFont = new Font("Arial", Font.PLAIN, 14);
@@ -178,7 +174,7 @@ public class Level1 extends JPanel implements ActionListener {
         g.setFont(uiFont);
         g.drawString("Score: " + score, camX, 20);
         g.drawString("Health " + health + "/100", camX, 35);
-        g.drawString("PlayerX " + thePlayer.getX() , camX, 50);
+        g.drawString("PlayerX " + thePlayer.getX(), camX, 50);
         g.dispose();
     }
 
@@ -191,26 +187,25 @@ public class Level1 extends JPanel implements ActionListener {
         Rectangle currentEnemyBounds;
         Rectangle currentSpikePitBounds;
 
-
         if (thePlayer.getY() > GroundLevel) {
             thePlayer.Land();
             thePlayer.setY(GroundLevel);
         }
-        
-            // Check to see if the player boundary (rectangle) intersects
-            // with the ember boundary (i.e. there is a collision)
-            for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-                if (embers[i].getVisible() == true) {
-                    currentEmberBounds = embers[i].getBounds();
 
-                    if (playerBounds.intersects(currentEmberBounds) == true) {
-                        score += embers[i].getScore();
-                        embers[i].setVisible(false);
-                    }
+        // Check to see if the player boundary (rectangle) intersects
+        // with the ember boundary (i.e. there is a collision)
+        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+            if (embers[i].getVisible() == true) {
+                currentEmberBounds = embers[i].getBounds();
+
+                if (playerBounds.intersects(currentEmberBounds) == true) {
+                    score += embers[i].getScore();
+                    embers[i].setVisible(false);
                 }
             }
+        }
 
-            if (CurrentCollisionDelay <= 0) {
+        if (CurrentCollisionDelay <= 0) {
             for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
                 currentEnemyBounds = enemies[j].getBounds();
 
@@ -228,12 +223,13 @@ public class Level1 extends JPanel implements ActionListener {
                 if (spikepit[k].getVisible() == true) {
                     if (playerBounds.intersects(currentSpikePitBounds)) {
                         health -= 5;
+                    }
                 }
+                CurrentCollisionDelay = MaxCollisionDelay;
             }
-            CurrentCollisionDelay=MaxCollisionDelay;
         }
     }
-    }
+
     /**
      * This method calls the movement methods on characters and NPCs
      */
@@ -254,9 +250,11 @@ public class Level1 extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent ae) {
-        //The repaint method starts the process of updating the screen - calling
-        //our version of the paintComponent method, which has the code for drawing
-        //our characters and objects
+        /**
+         * The repaint method starts the process of updating the screen -
+         * calling /our version of the paintComponent method, which has the code
+         * for drawing /our characters and objects
+         */
         DoCameraMove();
         doMovement();
         checkCollisions();
@@ -267,7 +265,9 @@ public class Level1 extends JPanel implements ActionListener {
     }
 
     /**
-     * This is a private KeyAdapter Class that we use to process keypresses
+     * This is a private KeyAdapter Class that we use to process keypresses it
+     * assigns each keypress a value then sends it to the player class to be
+     * translated into movement
      */
     private class TAdapter extends KeyAdapter {
 
@@ -306,19 +306,29 @@ public class Level1 extends JPanel implements ActionListener {
                 default:
                     break;
             }
+            //the key release for jump is not included here as it would have no effect
             thePlayer.stop(stop);
         }
     }
 
     private void DoCameraMove() {
+        /**
+         * this is where the calculations for camera movement are handled only x
+         * is included here as level one does not need to move up or down so
+         * including x would be redundant camX is set to the player's x value it
+         * is then adjusted by how much you can see of the screen to centre it
+         * on the player
+         *
+         *
+         * the camX value is then checked to make sure that it is within the
+         * bounds of the drawn level and adjusted if it is not
+         */
         camX = thePlayer.getX() - VIEWPORT_SIZE_X / 2;
-        camY = thePlayer.getY() - VIEWPORT_SIZE_Y / 2;
-
         if (camX > offsetMaxX) {
             camX = offsetMaxX;
         } else if (camX < offsetMinX) {
             camX = offsetMinX;
         }
-        
+
     }
 }
