@@ -57,9 +57,9 @@ public class Level1 extends JPanel implements ActionListener {
     public int CurrentCollisionDelay = 0;
     public int MaxCollisionDelay = 30;
 
-    private final int NUMBER_OF_ENEMIES = 15;
+    private final int NUMBER_OF_ENEMIES = 10;
     private final int NUMBER_OF_EMBERS = 15;
-    private final int NUMBER_OF_SPIKEPITS = 10;
+    private final int NUMBER_OF_SPIKEPITS = 15;
 
     private final int GroundLevel = 520;
 
@@ -76,11 +76,13 @@ public class Level1 extends JPanel implements ActionListener {
         int emberX, emberY; // X and Y coordinates for the collectables
         int enemyX, enemyY; // X and Y coordinates for the enemies
         int spikepitX, spikepitY; // X and Y coordinates for the spike pits
-
+        int maxSpawnHeight = 350; // The maximum height collectables can spawn at
+        int maxEnemySpawnHeight = 500; // The maximum height enemies can spawn at
+      
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
             emberX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            emberY = rand.nextInt(GroundLevel) + 1; // pick a random Y coorinate
+            emberY = rand.nextInt(GroundLevel - maxSpawnHeight) + maxSpawnHeight; // pick a random Y coordinate
 
             // Use the overloaded ember constructor to create a new
             // ember object with the X and Y coordinates selected
@@ -91,16 +93,16 @@ public class Level1 extends JPanel implements ActionListener {
         // Initialise all Monster Objects
         for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
             enemyX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            enemyY = rand.nextInt(GroundLevel) + 1;
+            enemyY = rand.nextInt(GroundLevel - maxEnemySpawnHeight) + maxEnemySpawnHeight;
 
             enemies[j] = new Enemy(enemyX, enemyY);
         }
 
         // Initialise all Spike Pits
         for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-            spikepitX = rand.nextInt(3600) + (thePlayer.getX() + 20); //will ensure that the spike pit cannot spawn under the player start position
+            spikepitX = rand.nextInt(3600) + (thePlayer.getX() + 20); //will ensure that the spike pit cannot spawn under the player start position            
             spikepitY = (GroundLevel - 33);
-
+                     
             spikepit[k] = new SpikePit(spikepitX, spikepitY);
         }
 
