@@ -18,7 +18,14 @@ public class Enemy {
 
     private int x; // The enemy x coordinate
     private int y; // The enemy y coordinate
-
+    private int Startx; // The enemy x coordinate
+    private int Starty; // The enemy y coordinate
+    private int Endx = 0; // The enemy x coordinate
+    private int Endy = 0; // The enemy y coordinate
+    private int dX; // The enemy x coordinate
+    private int dY; // The enemy y coordinate
+    private int Movespeed = 2; // The enemy y coordinate
+    private int start = 1;
     // displacement from current x coordinate (i.e. how far the x coord has changed 
     // by user interaction
     //This image represents the enemy
@@ -29,24 +36,49 @@ public class Enemy {
     //This variable stores the height of the image
     private int spriteHeight;
 
-    private int speed;
-    private int damage;
-    private int score;
+    private int damage = 5;
     private int direction;
     private boolean isVisible;
 
     /**
      * Default constructor that sets X and Y coordinates to 10
+     *
+     * @param newX
+     * @param newY
+     * @param Direction
+     * @param Distance
      */
-    public Enemy(int newX, int newY) {
+    public Enemy(int newX, int newY, String Direction, int Distance) {
         //Starting X and Y coordinates
-        x = newX;
-        y = newY;
+        Startx = newX;
+        Starty = newY;
+        x = Startx;
+        y = Starty;
 
-        damage = 5;
-        score = 10;
-        direction = 0;
-        speed = 3;
+        switch (Direction) {
+            case "UP":
+                dY -= 1;
+                Endy = Starty - Distance;
+                direction = 1;
+                break;
+            case "DOWN":
+                dY = 1;
+                Endy = Starty + Distance;
+                direction = 2;
+                break;
+            case "LEFT":
+                dX -= 1;
+                Endx = Startx - Distance;
+                direction = 3;
+                break;
+            case "RIGHT":
+                dX = 1;
+                Endx = Startx + Distance;
+                direction = 4;
+                break;
+            default:
+                System.out.println("error in enemy direction");
+        }
         isVisible = true;
         initEnemy();
     }
@@ -65,16 +97,8 @@ public class Enemy {
         spriteHeight = sprite.getHeight();
     }
 
-    public void setX(int newX) {
-        x = newX;
-    }
-
     public int getX() {
         return x;
-    }
-
-    public void setY(int newY) {
-        y = newY;
     }
 
     public int getY() {
@@ -98,49 +122,68 @@ public class Enemy {
         return sprite;
     }
 
-    public void move(int levelWidth, int levelHeight) {
-        Random rand = new Random();
-        int randomDirection;
-        int tempX = x; //Use a temporary value for X to start - only update X pos if everything is fine
-        int tempY = y; //Use a temporary value for Y to start - only update X pos if everything is fine
+    public void move() {
 
-        randomDirection = rand.nextInt(4) + 1;
-
-        switch (randomDirection) {
+        if (start == 1) {
+            y += (dY * Movespeed);
+            x += (dX * Movespeed);
+        }
+        if (start == 2) {
+            y -= (dY * Movespeed);
+            x -= (dX * Movespeed);
+        }
+        switch (direction) {
             case 1:
-                tempY -= speed;
+                if (start == 1) {
+                    if (y < Endy) {
+                        start = 2;
+                    }
+                }
+                if (start == 2) {
+                    if (y > Starty) {
+                        start = 1;
+                    }
+                }
                 break;
             case 2:
-                tempY += speed;
+                if (start == 1) {
+                    if (y > Endy) {
+                        start = 2;
+                    }
+                }
+                if (start == 2) {
+                    if (y < Starty) {
+                        start = 1;
+                    }
+                }
                 break;
             case 3:
-                tempX -= speed;
+                if (start == 1) {
+                    if (x < Endx) {
+                        start = 2;
+                    }
+                }
+                if (start == 2) {
+                    if (x > Startx) {
+                        start = 1;
+                    }
+                }
                 break;
             case 4:
-                tempX += speed;
+                if (start == 1) {
+                    if (x > Endx) {
+                        start = 2;
+                    }
+                }
+                if (start == 2) {
+                    if (x < Startx) {
+                        start = 1;
+                    }
+                }
                 break;
-        }
 
-        // Adding in some boundary checks      
-        // X coordinate first
-        // First check that the new X coordinate won't go off the left hand
-        // side of the window
-        // Then check that the X coordinate won't go off the right hand side
-        if (tempX < (spriteWidth / 2)) {
-            tempX += spriteWidth + speed; // Bump the X coordinate by width + speed to move away from the edge
-        } else if ((tempX + spriteWidth) > levelWidth - (spriteWidth / 2)) {
-            tempX -= spriteWidth + speed; // Bump the X coordinate along by width+ speed
+            default:
         }
-
-        // Now check the Y coordinate - first the top of the screen, then the bottom of the screen  
-        if (tempY < (spriteHeight / 2)) {
-            tempY += spriteHeight + speed;
-        } else if ((tempY + spriteHeight) > levelHeight - (spriteHeight / 2)) {
-            tempY -= spriteHeight + speed;
-        }
-
-        x = tempX;
-        y = tempY;
 
     }
 
