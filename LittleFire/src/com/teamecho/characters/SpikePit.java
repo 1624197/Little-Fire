@@ -35,7 +35,7 @@ public class SpikePit {
         isVisible = true;
    
         try {
-            sprite = ImageIO.read(getClass().getResource("/Images/Enemy_Images/SpikePit.png"));
+            sprite = ImageIO.read(getClass().getResource("/Images/Enemy_Images/Correct size spikes.png"));
         } catch (Exception ex) {
             System.err.println("Error loading SpikePit image");
         }

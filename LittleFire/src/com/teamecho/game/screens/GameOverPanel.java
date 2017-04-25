@@ -81,6 +81,7 @@ public class GameOverPanel extends JPanel implements MouseListener {
                      * player to level 1 
                      */
                     game.SelectScreen(1);
+                    
                 }
             }
 
