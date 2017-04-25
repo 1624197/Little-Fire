@@ -121,11 +121,15 @@ public class Game {
                 optionMenu.requestFocus();
                 break;
             case 3:
+                lvl1.reset();
                 cl.show(gameWindow.getContentPane(), "LVL1");
                 lvl1.requestFocus();
                 
                 break;
             case 5:
+                cl.show(gameWindow.getContentPane(), "OVER");
+                GameOverScreen.requestFocus();
+                case 6:
                 cl.show(gameWindow.getContentPane(), "OVER");
                 GameOverScreen.requestFocus();
                 break;

@@ -22,8 +22,9 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class StartGamePanel extends JPanel implements MouseListener {
+public class StartGamePanel extends JPanel implements MouseListener, MouseMotionListener {
 
     private Game game; // this is a link back to the game controller class
     private BufferedImage backgroundImage = null;
@@ -42,7 +43,7 @@ public class StartGamePanel extends JPanel implements MouseListener {
 
         //Load the background image
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/Images/Screens/StartMenu.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("/Images/Screens/Main.png"));
         } catch (Exception ex) {
             System.err.println("Error Loading Start Game Image");
         }
@@ -51,11 +52,11 @@ public class StartGamePanel extends JPanel implements MouseListener {
         //So keypresses are registered to this panel
         setFocusable(true);
         addMouseListener(this);
-
+        addMouseMotionListener(this);
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         //call the paintComponent method on the superclass to initialise drawing
         super.paintComponent(g);
         Font titleFont = new Font("Arial", Font.PLAIN, 22);
@@ -115,4 +116,32 @@ public class StartGamePanel extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
-}
+    @Override 
+    public void mouseMoved(MouseEvent e) {
+            if (e.getX() > StartButton.getX() && e.getX() < (StartButton.getX() + StartButton.getSpriteWidth())) {
+                if (e.getY() > StartButton.getY() && e.getY() < (StartButton.getY() + StartButton.getSpriteHeight())) {
+                    StartButton.setImage(2);
+                    
+                }
+            }else{
+                StartButton.setImage(1);
+                    
+            }
+            if (e.getX() > OptionButton.getX() && e.getX() < (OptionButton.getX() + OptionButton.getSpriteWidth())) {
+                if (e.getY() > OptionButton.getY() && e.getY() < (OptionButton.getY() + OptionButton.getSpriteHeight())) {
+                    OptionButton.setImage(2);
+                    
+                }
+            }else{
+                OptionButton.setImage(1);
+                    
+            }
+            repaint();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        
+    }
+    }
+

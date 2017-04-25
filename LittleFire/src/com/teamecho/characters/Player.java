@@ -102,6 +102,9 @@ public class Player {
     public int getY() {
         return y;
     }
+    public void setdX(int temp) {
+        dX=temp;
+    }
     public void falling() {
         Jumping = true;
     }
