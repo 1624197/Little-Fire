@@ -61,7 +61,11 @@ public class Level1 extends JPanel implements ActionListener {
     public int CurrentCollisionDelay = 0;
     public int MaxCollisionDelay = 30;
 
-    private final int NUMBER_OF_ENEMIES = 15;
+    private final int NUMBER_OF_ENEMIES = 10;
+    private final int[] EnemyX = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final int[] EnemyY = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final String[] EnemyDirection = {"UP","RIGHT","DOWN","LEFT","UP","RIGHT","DOWN","LEFT","DOWN","DOWN"};
+    private final int[] EnemyDistance = {1, 2, 1, 2, 1, 2, 1, 2, 1, 2};
     private final int NUMBER_OF_EMBERS = 15;
     private final int NUMBER_OF_SPIKEPITS = 10;
     private final int[] SpikepitX = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -90,7 +94,6 @@ public class Level1 extends JPanel implements ActionListener {
         Random rand = new Random();
 
         int emberX, emberY; // X and Y coordinates for the collectables
-        int enemyX, enemyY; // X and Y coordinates for the enemies
         int spikepitY; // X and Y coordinates for the spike pits
 
         //Initialise all embers
@@ -106,10 +109,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         // Initialise all Monster Objects
         for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemyX = startline + (rand.nextInt(3000) + (thePlayer.getX() + 20)); // will ensure that the enemy cannot spawn under the player start position
-            enemyY = rand.nextInt(GroundLevel) - blockspace;
-
-            enemies[j] = new Enemy(enemyX, enemyY);
+            enemies[j] = new Enemy(startline + (EnemyX[j] * blockspace), GroundLevel - (EnemyY[j] * blockspace) , EnemyDirection[j] , EnemyDistance[j]*blockspace);
         }
 
         // Initialise all Spike Pits
@@ -124,7 +124,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         init();
     }
-
+    
 //This is the private init method that we use to set the defaults for the 3. * level.
 //We can call this method to reset the level (if required) - we can't do that
 //with the constructor method - that can only be called once.
@@ -306,7 +306,7 @@ public class Level1 extends JPanel implements ActionListener {
         thePlayer.updateMove();
 
         for (int i = 0; i < NUMBER_OF_ENEMIES; i++) {
-            enemies[i].move(3600, 600); //move within the bounds of the game level
+            enemies[i].move();
         }
     }
 
@@ -438,10 +438,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         // Initialise all Monster Objects
         for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemyX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            enemyY = rand.nextInt(GroundLevel) + 1;
-
-            enemies[j] = new Enemy(enemyX, enemyY);
+            enemies[j] = new Enemy(startline + (EnemyX[j] * blockspace), GroundLevel - (EnemyY[j] * blockspace) , EnemyDirection[j] , EnemyDistance[j]*blockspace);
         }
 
     }
