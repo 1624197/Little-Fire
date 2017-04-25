@@ -51,7 +51,7 @@ public class Level1 extends JPanel implements ActionListener {
     private Enemy[] enemies;
     private SpikePit[] spikepit;
     private Platform[] Platform;
-    private int blarg;
+    private int InAir;
     int VIEWPORT_SIZE_X = 800;
     int offsetMaxX = 3600 - VIEWPORT_SIZE_X;
     int offsetMinX = 0;
@@ -210,33 +210,32 @@ public class Level1 extends JPanel implements ActionListener {
         Rectangle currentEmberBounds; //this variable will be updated with the bounds of each ember in a loop
         Rectangle currentEnemyBounds;
         Rectangle currentSpikePitBounds;
-        blarg = 1;
+        InAir = 1;
         if (thePlayer.getY() > GroundLevel - thePlayer.getSpriteHeight()) {
             thePlayer.Land();
             thePlayer.setY(GroundLevel - thePlayer.getSpriteHeight());
-            blarg = 2;
+            InAir = 2;
 
         }
         for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
             if (thePlayer.getY() < Platform[i].getY() && thePlayer.getY() > (Platform[i].getY() - thePlayer.getSpriteHeight()) && thePlayer.getX() > Platform[i].getX() && thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth())) {
                 thePlayer.Land();
                 thePlayer.setY(Platform[i].getY() - thePlayer.getSpriteHeight());
-                blarg = 2;
+                InAir = 2;
             }
 
         }
         if (thePlayer.getY() == GroundLevel - thePlayer.getSpriteHeight()) {
-            blarg = 2;
+            InAir = 2;
         }
-        
-        
+
         for (int k = 0; k < NUMBER_OF_PLATFORMS; k++) {
-            if (thePlayer.getY() == Platform[k].getY() - thePlayer.getSpriteHeight()&& thePlayer.getX() > Platform[k].getX() && thePlayer.getX() < (Platform[k].getX() + Platform[k].getSpriteWidth())) {
-                blarg = 2;
+            if (thePlayer.getY() == Platform[k].getY() - thePlayer.getSpriteHeight() && thePlayer.getX() > Platform[k].getX() && thePlayer.getX() < (Platform[k].getX() + Platform[k].getSpriteWidth())) {
+                InAir = 2;
             }
         }
 
-        if (blarg == 1) {
+        if (InAir == 1) {
             thePlayer.falling();
 
         }
@@ -278,6 +277,7 @@ public class Level1 extends JPanel implements ActionListener {
         }
 
         if (playerBounds.intersects(thePortal.getBounds())) {
+            reset();
             game.SelectScreen(6);
         }
 
@@ -327,6 +327,7 @@ public class Level1 extends JPanel implements ActionListener {
         DoCameraMove();
         DoMovement();
         checkCollisions();
+        DoAnimate();
         repaint();
         if (CurrentCollisionDelay > 0) {
             CurrentCollisionDelay--;
@@ -445,4 +446,9 @@ public class Level1 extends JPanel implements ActionListener {
 
     }
 
+    public void DoAnimate() {
+        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+            embers[i].Animate();
+        }
+    }
 }
