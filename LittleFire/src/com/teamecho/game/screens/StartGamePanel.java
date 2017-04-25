@@ -11,8 +11,9 @@ package com.teamecho.game.screens;
  * @author 1622542
  */
 import com.teamecho.game.Game;
-import com.teamecho.game.objects.OptionMenuButton;
-import com.teamecho.game.objects.StartGameButton;
+import com.teamecho.game.objects.TutorialButton;
+import com.teamecho.game.objects.PlayButton;
+import com.teamecho.game.objects.CreditsButton;
 import javax.swing.JPanel;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -29,13 +30,15 @@ public class StartGamePanel extends JPanel implements MouseListener, MouseMotion
     private Game game; // this is a link back to the game controller class
     private BufferedImage backgroundImage = null;
     private final String SCREEN_TITLE = "Main Menu"; // sets screen title
-    private StartGameButton StartButton;
-    private OptionMenuButton OptionButton;
+    private PlayButton StartButton;
+    private TutorialButton TutorialButton;
+    private CreditsButton CreditsButton;
 
     public StartGamePanel(Game theGame) {
         game = theGame;
-        StartButton = new StartGameButton();
-        OptionButton = new OptionMenuButton();
+        StartButton = new PlayButton();
+        TutorialButton = new TutorialButton();
+        CreditsButton = new CreditsButton();
         initPanel();
     }
 
@@ -43,7 +46,7 @@ public class StartGamePanel extends JPanel implements MouseListener, MouseMotion
 
         //Load the background image
         try {
-            backgroundImage = ImageIO.read(getClass().getResource("/Images/Screens/Main.png"));
+            backgroundImage = ImageIO.read(getClass().getResource("/Images/Screens/MainMenuScreen.png"));
         } catch (Exception ex) {
             System.err.println("Error Loading Start Game Image");
         }
@@ -66,7 +69,8 @@ public class StartGamePanel extends JPanel implements MouseListener, MouseMotion
         g.drawString(SCREEN_TITLE, 20, 20);
         g.drawImage(backgroundImage, 0, 0, null);
         g.drawImage(StartButton.getSprite(), StartButton.getX(), StartButton.getY(), null);
-        g.drawImage(OptionButton.getSprite(), OptionButton.getX(), OptionButton.getY(), null);
+        g.drawImage(TutorialButton.getSprite(), TutorialButton.getX(), TutorialButton.getY(), null);
+        g.drawImage(CreditsButton.getSprite(), CreditsButton.getX(), CreditsButton.getY(), null);
         Toolkit.getDefaultToolkit().sync(); // Ensure that the objects visual state is up to date
     }
 
@@ -74,28 +78,39 @@ public class StartGamePanel extends JPanel implements MouseListener, MouseMotion
     public void mouseClicked(MouseEvent e) {
         //on mouse click checks to see if the mouse is within the area of the button
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (e.getX() > StartButton.getX() && e.getX() < (StartButton.getX() + StartButton.getSpriteWidth())) {
-                if (e.getY() > StartButton.getY() && e.getY() < (StartButton.getY() + StartButton.getSpriteHeight())) {
-                    /**
-                     * if the mouse is within the area a function is run within
-                     * the Game class that sets the screen to the right one as
-                     * this is for the starting the game this should send the
-                     * player to level 1 
-                     */
-                    game.SelectScreen(3);
-                }
+            if (e.getX() > StartButton.getX() && e.getX() < (StartButton.getX() + StartButton.getSpriteWidth()) && e.getY() > StartButton.getY() && e.getY() < (StartButton.getY() + StartButton.getSpriteHeight())) {
+
+                /**
+                 * if the mouse is within the area a function is run within the
+                 * Game class that sets the screen to the right one as this is
+                 * for the starting the game this should send the player to
+                 * level 1
+                 */
+                game.SelectScreen(3);
+
             }
-            if (e.getX() > OptionButton.getX() && e.getX() < (OptionButton.getX() + OptionButton.getSpriteWidth())) {
-                if (e.getY() > OptionButton.getY() && e.getY() < (OptionButton.getY() + OptionButton.getSpriteHeight())) {
+            if (e.getX() > TutorialButton.getX() && e.getX() < (TutorialButton.getX() + TutorialButton.getSpriteWidth())&&e.getY() > TutorialButton.getY() && e.getY() < (TutorialButton.getY() + TutorialButton.getSpriteHeight())) {
+                 
                     /**
                      * if the mouse is within the area a function is run within
                      * the Game class that sets the screen to the right one as
-                     * this is for the options menu the player should see the options menu
+                     * this is for the options menu the player should see the
+                     * options menu
                      */
                     game.SelectScreen(2);
-                }
+                
             }
-
+            if (e.getX() > CreditsButton.getX() && e.getX() < (CreditsButton.getX() + CreditsButton.getSpriteWidth())&&e.getY() > CreditsButton.getY() && e.getY() < (CreditsButton.getY() + CreditsButton.getSpriteHeight())) {
+                 
+                    /*
+                     * if the mouse is within the area a function is run within
+                     * the Game class that sets the screen to the right one as
+                     * this is for the options menu the player should see the
+                     * options menu
+                     */
+                    game.SelectScreen(6);
+                
+            }
         }
 
     }
@@ -116,32 +131,36 @@ public class StartGamePanel extends JPanel implements MouseListener, MouseMotion
     public void mouseExited(MouseEvent e) {
 
     }
-    @Override 
+
+    @Override
     public void mouseMoved(MouseEvent e) {
-            if (e.getX() > StartButton.getX() && e.getX() < (StartButton.getX() + StartButton.getSpriteWidth())) {
-                if (e.getY() > StartButton.getY() && e.getY() < (StartButton.getY() + StartButton.getSpriteHeight())) {
-                    StartButton.setImage(2);
-                    
-                }
-            }else{
-                StartButton.setImage(1);
-                    
-            }
-            if (e.getX() > OptionButton.getX() && e.getX() < (OptionButton.getX() + OptionButton.getSpriteWidth())) {
-                if (e.getY() > OptionButton.getY() && e.getY() < (OptionButton.getY() + OptionButton.getSpriteHeight())) {
-                    OptionButton.setImage(2);
-                    
-                }
-            }else{
-                OptionButton.setImage(1);
-                    
-            }
-            repaint();
+        if (e.getX() > StartButton.getX() && e.getX() < (StartButton.getX() + StartButton.getSpriteWidth()) && e.getY() > StartButton.getY() && e.getY() < (StartButton.getY() + StartButton.getSpriteHeight())) {
+                StartButton.setImage(2);
+
+            
+        } else {
+            StartButton.setImage(1);
+
+        }
+        if (e.getX() > TutorialButton.getX() && e.getX() < (TutorialButton.getX() + TutorialButton.getSpriteWidth())&&e.getY() > TutorialButton.getY() && e.getY() < (TutorialButton.getY() + TutorialButton.getSpriteHeight())) {
+                TutorialButton.setImage(2);
+
+            
+        } else {
+            TutorialButton.setImage(1);
+
+        }
+        if (e.getX() > CreditsButton.getX() && e.getX() < (CreditsButton.getX() + CreditsButton.getSpriteWidth())&&e.getY() > CreditsButton.getY() && e.getY() < (CreditsButton.getY() + CreditsButton.getSpriteHeight())) {
+                CreditsButton.setImage(2);
+            
+        } else {
+            CreditsButton.setImage(1);
+        }
+        repaint();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        
-    }
-    }
 
+    }
+}

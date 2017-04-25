@@ -7,12 +7,13 @@
 package com.teamecho.game.screens;
 
 import com.teamecho.game.Game;
-import com.teamecho.game.objects.GameOverButton;
+import com.teamecho.game.objects.MainMenuButton;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -21,16 +22,16 @@ import javax.swing.JPanel;
  *
  * @author Calum Blair
  */
-public class GameOverPanel extends JPanel implements MouseListener {
+public class GameOverPanel extends JPanel implements MouseListener, MouseMotionListener {
 
     private Game game; // this is a link back to the game controller class
     private BufferedImage backgroundImage = null;
     private final String SCREEN_TITLE = "Main Menu"; // sets screen title
-    private GameOverButton GameOverButton;
+    private MainMenuButton MainMenuButton;
 
     public GameOverPanel(Game theGame) {
         game = theGame;
-        GameOverButton = new GameOverButton();
+        MainMenuButton = new MainMenuButton();
         initPanel();
     }
 
@@ -47,7 +48,7 @@ public class GameOverPanel extends JPanel implements MouseListener {
         //So keypresses are registered to this panel
         setFocusable(true);
         addMouseListener(this);
-
+        addMouseMotionListener(this);
     }
 
     @Override
@@ -60,19 +61,17 @@ public class GameOverPanel extends JPanel implements MouseListener {
         g.setFont(titleFont);
         g.drawString(SCREEN_TITLE, 20, 20);
         g.drawImage(backgroundImage, 0, 0, null);
-        g.drawImage(GameOverButton.getSprite(), GameOverButton.getX(), GameOverButton.getY(), null);
-        g.drawImage(GameOverButton.getSprite(), GameOverButton.getX(), GameOverButton.getY(), null);
+        g.drawImage(MainMenuButton.getSprite(), MainMenuButton.getX(), MainMenuButton.getY(), null);
+        g.drawImage(MainMenuButton.getSprite(), MainMenuButton.getX(), MainMenuButton.getY(), null);
         Toolkit.getDefaultToolkit().sync(); // Ensure that the objects visual state is up to date
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
-        
         //on mouse click checks to see if the mouse is within the area of the button
         if (e.getButton() == MouseEvent.BUTTON1) {
-            if (e.getX() > GameOverButton.getX() && e.getX() < (GameOverButton.getX() + GameOverButton.getSpriteWidth())) {
-                if (e.getY() > GameOverButton.getY() && e.getY() < (GameOverButton.getY() + GameOverButton.getSpriteHeight())) {
+            if (e.getX() > MainMenuButton.getX() && e.getX() < (MainMenuButton.getX() + MainMenuButton.getSpriteWidth())&&e.getY() > MainMenuButton.getY() && e.getY() < (MainMenuButton.getY() + MainMenuButton.getSpriteHeight())) {
+                 
                     
                     /**
                      * if the mouse is within the area a function is run within
@@ -82,7 +81,7 @@ public class GameOverPanel extends JPanel implements MouseListener {
                      */
                     game.SelectScreen(1);
                     
-                }
+                
             }
 
         }
@@ -105,4 +104,22 @@ public class GameOverPanel extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+    @Override 
+    public void mouseMoved(MouseEvent e) {
+            if (e.getX() > MainMenuButton.getX() && e.getX() < (MainMenuButton.getX() + MainMenuButton.getSpriteWidth()) && e.getY() > MainMenuButton.getY() && e.getY() < (MainMenuButton.getY() + MainMenuButton.getSpriteHeight())) {
+                    MainMenuButton.setImage(2);
+                    
+                
+            }else{
+                MainMenuButton.setImage(1);
+                    
+            }
+            repaint();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        
+    }
+    
 }

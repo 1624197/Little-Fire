@@ -6,8 +6,9 @@
 package com.teamecho.game;
 
 import com.teamecho.game.screens.StartGamePanel;
-import com.teamecho.game.screens.OptionMenuPanel;
+import com.teamecho.game.screens.TutorialPanel;
 import com.teamecho.game.screens.GameOverPanel;
+import com.teamecho.game.screens.CreditsPanel;
 import com.teamecho.levels.Level1;
 import javax.swing.JFrame;
 import java.awt.Dimension;
@@ -31,7 +32,8 @@ public class Game {
     JFrame gameWindow; // Main Game Window - We add game components here
     StartGamePanel startScreen; // the starting screen displayed before the game is played
     Level1 lvl1; // this is level 1
-    OptionMenuPanel optionMenu;//this is the options menu
+    TutorialPanel Tutorial;//this is the options menu
+    CreditsPanel Credits;
     GameOverPanel GameOverScreen;//this is the game over screen
 
     public Game() {
@@ -52,23 +54,25 @@ public class Game {
         gameWindow.setLayout(new CardLayout());
         startScreen = new StartGamePanel(this);
         startScreen.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        
+
         lvl1 = new Level1(this);
         //the size for level 1 is set separetly to ensure functionality for the whole level
         lvl1.setPreferredSize(new Dimension(Level1_Width, Level1_Height));
-        
-        optionMenu = new OptionMenuPanel(this);
-        optionMenu.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        
+
+        Tutorial = new TutorialPanel(this);
+        Tutorial.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+
         GameOverScreen = new GameOverPanel(this);
         GameOverScreen.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        
-        // This will add a start Screen to the Main Window
+
+        Credits = new CreditsPanel(this);
+        Credits.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+
         gameWindow.getContentPane().add(startScreen, "INTRO");
         gameWindow.getContentPane().add(lvl1, "LVL1");
-        gameWindow.getContentPane().add(optionMenu, "OPTION");
+        gameWindow.getContentPane().add(Tutorial, "TUTORIAL");
         gameWindow.getContentPane().add(GameOverScreen, "OVER");
-
+        gameWindow.getContentPane().add(Credits, "CREDITS");
     }
 
     public void showStartScreen() {
@@ -100,6 +104,8 @@ public class Game {
          *
          * screen 5 = Game Over Screen
          *
+         * screen 6 = credits screen
+         *
          * Any further Screens added or planned to be added should be added here
          * and adjustments to the above list should be made
          */
@@ -113,25 +119,24 @@ public class Game {
                  */
                 cl.show(gameWindow.getContentPane(), "INTRO");
                 startScreen.requestFocus();
-
                 break;
             case 2:
-                
-                cl.show(gameWindow.getContentPane(), "OPTION");
-                optionMenu.requestFocus();
+
+                cl.show(gameWindow.getContentPane(), "TUTORIAL");
+                Tutorial.requestFocus();
                 break;
             case 3:
                 lvl1.reset();
                 cl.show(gameWindow.getContentPane(), "LVL1");
                 lvl1.requestFocus();
-                
                 break;
             case 5:
                 cl.show(gameWindow.getContentPane(), "OVER");
                 GameOverScreen.requestFocus();
-                case 6:
-                cl.show(gameWindow.getContentPane(), "OVER");
-                GameOverScreen.requestFocus();
+                break;
+            case 6:
+                cl.show(gameWindow.getContentPane(), "CREDITS");
+                Credits.requestFocus();
                 break;
             default:
 

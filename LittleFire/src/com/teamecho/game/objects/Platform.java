@@ -28,7 +28,7 @@ public class Platform {
         isVisible = true;
 
         try {
-            sprite = ImageIO.read(getClass().getResourceAsStream("/Images/Objects/Platform.png"));
+            sprite = ImageIO.read(getClass().getResourceAsStream("/Images/Objects/GameObjects/Platform.png"));
         } catch (Exception ex) {
             System.err.println("Error loading platform sprite");
         }

@@ -36,7 +36,7 @@ public class Portal {
         
         try
         {
-            sprite = ImageIO.read(getClass().getResourceAsStream("/Images/Objects/Portal.png"));
+            sprite = ImageIO.read(getClass().getResourceAsStream("/Images/Objects/GameObjects/Portal.png"));
         }catch(Exception ex)
         {
             System.err.println("Error loading portal sprite");
