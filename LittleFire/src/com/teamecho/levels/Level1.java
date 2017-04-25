@@ -61,19 +61,20 @@ public class Level1 extends JPanel implements ActionListener {
     public int CurrentCollisionDelay = 0;
     public int MaxCollisionDelay = 30;
 
-    private final int NUMBER_OF_ENEMIES = 10;
-    private final int[] EnemyX = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    private final int[] EnemyY = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    private final String[] EnemyDirection = {"UP","RIGHT","DOWN","LEFT","UP","RIGHT","DOWN","LEFT","DOWN","DOWN"};
-    private final int[] EnemyDistance = {1, 2, 1, 2, 1, 2, 1, 2, 1, 2};
-    private final int NUMBER_OF_EMBERS = 15;
+    private final int NUMBER_OF_ENEMIES = 7;
+    private final int[] EnemyX = {5, 12, 16, 30, 42, 44, 46};
+    private final int[] EnemyY = {8, 1, 1, 3, 6, 1, 7};
+    private final String[] EnemyDirection = {"RIGHT", "UP","LEFT","UP","LEFT","UP", "DOWN"};
+    private final int[] EnemyDistance = {3, 6, 3, 1, 2, 3, 4};
+    private final int NUMBER_OF_EMBERS = 10;
     private final int NUMBER_OF_SPIKEPITS = 10;
-    private final int[] SpikepitX = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    private final int NUMBER_OF_PLATFORMS = 10;
-    private final int[] PlatformX = {1, 17, 3, 4, 5, 6, 7, 8, 9, 10};
-    private final int[] PlatformY = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final int[] SpikepitX = {11, 17, 24, 25, 27, 34, 39, 40, 48, 49};
+    private final int[] SpikepitY = {1, 1, 1, 6, 1, 1, 6, 1, 1, 1};
+    private final int NUMBER_OF_PLATFORMS = 34;
+    private final int[] PlatformX = {5, 6, 7, 8, 9, 10, 13, 14, 15, 19, 20, 21, 22, 23, 24, 25, 26, 31, 32, 33, 35, 36, 37, 38, 38, 39, 40, 41, 42, 43, 45, 46, 46, 47};
+    private final int[] PlatformY = {1, 2, 3, 4, 4, 4, 4, 4, 3, 1, 2, 3, 4, 4, 5, 5, 5, 1, 2, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 4, 1, 1, 2, 1};
 
-    private final int PortalX = 200;
+    private final int PortalX = 3400;
     private final int PortalY = 200;
     private final int blockspace = 64;
     private final int startline = 100;
@@ -114,8 +115,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         // Initialise all Spike Pits
         for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-            spikepitY = (GroundLevel - blockspace);
-            spikepit[k] = new SpikePit(startline + (SpikepitX[k] * blockspace), spikepitY);
+            spikepit[k] = new SpikePit(startline + (SpikepitX[k] * blockspace), GroundLevel - (SpikepitY[k] * blockspace));
         }
 
         for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
@@ -193,12 +193,11 @@ public class Level1 extends JPanel implements ActionListener {
         }
 
         //Code to draw the score and health on screen
-        Font uiFont = new Font("Arial", Font.PLAIN, 14);
+        Font uiFont = new Font("Arial", Font.PLAIN, 20);
         g.setColor(Color.black);
         g.setFont(uiFont);
         g.drawString("Score: " + score, camX, 20);
-        g.drawString("Health " + health + "/100", camX, 35);
-        g.drawString("PlayerX " + thePlayer.getX(), camX, 50);
+        g.drawString("Health " + health + "/100", camX, 42);
         g.dispose();
     }
 
@@ -327,7 +326,7 @@ public class Level1 extends JPanel implements ActionListener {
         DoCameraMove();
         DoMovement();
         checkCollisions();
-        DoAnimate();
+        //DoAnimate();
         repaint();
         if (CurrentCollisionDelay > 0) {
             CurrentCollisionDelay--;
