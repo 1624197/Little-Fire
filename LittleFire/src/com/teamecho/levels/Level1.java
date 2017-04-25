@@ -67,6 +67,8 @@ public class Level1 extends JPanel implements ActionListener {
     private final String[] EnemyDirection = {"RIGHT", "UP","LEFT","UP","LEFT","UP", "DOWN"};
     private final int[] EnemyDistance = {3, 6, 3, 1, 2, 3, 4};
     private final int NUMBER_OF_EMBERS = 10;
+    private final int[] EmberX = {6, 7, 14, 22, 25, 32, 33, 40, 40, 46};
+    private final int[] EmberY = {3, 1, 5, 2, 7, 5, 4, 2, 8, 3};
     private final int NUMBER_OF_SPIKEPITS = 10;
     private final int[] SpikepitX = {11, 17, 24, 25, 27, 34, 39, 40, 48, 49};
     private final int[] SpikepitY = {1, 1, 1, 6, 1, 1, 6, 1, 1, 1};
@@ -99,13 +101,8 @@ public class Level1 extends JPanel implements ActionListener {
 
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            emberX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            emberY = rand.nextInt(GroundLevel) + 1; // pick a random Y coorinate
-
-            // Use the overloaded ember constructor to create a new
-            // ember object with the X and Y coordinates selected
-            // and a score value
-            embers[i] = new Ember(emberX, emberY, 30);
+            
+            embers[i] = new Ember(startline + (EmberX[i] * blockspace), GroundLevel - (EmberY[i] * blockspace), 30);
         }
 
         // Initialise all Monster Objects
@@ -277,7 +274,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         if (playerBounds.intersects(thePortal.getBounds())) {
             reset();
-            game.SelectScreen(6);
+            game.SelectScreen(4);
         }
 
         for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
@@ -426,13 +423,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            emberX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            emberY = rand.nextInt(GroundLevel) + 1; // pick a random Y coorinate
-
-            // Use the overloaded ember constructor to create a new
-            // ember object with the X and Y coordinates selected
-            // and a score value
-            embers[i] = new Ember(emberX, emberY, 30);
+            embers[i] = new Ember(startline + (EmberX[i] * blockspace), GroundLevel - (EmberY[i] * blockspace), 30);
         }
 
         // Initialise all Monster Objects

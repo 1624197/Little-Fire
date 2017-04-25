@@ -10,6 +10,7 @@ import com.teamecho.game.screens.TutorialPanel;
 import com.teamecho.game.screens.GameOverPanel;
 import com.teamecho.game.screens.CreditsPanel;
 import com.teamecho.levels.Level1;
+import com.teamecho.levels.Level2;
 import javax.swing.JFrame;
 import java.awt.Dimension;
 import java.awt.CardLayout;
@@ -25,6 +26,8 @@ public class Game {
     private final int WINDOW_HEIGHT = 600;
     public final int Level1_Height = 800;
     public final int Level1_Width = 3600;
+    public final int Level2_Height = 800;
+    public final int Level2_Width = 3600;
     private final String Title = "Little Fire";
 
     private int lastGameScore = 0;
@@ -32,6 +35,7 @@ public class Game {
     JFrame gameWindow; // Main Game Window - We add game components here
     StartGamePanel startScreen; // the starting screen displayed before the game is played
     Level1 lvl1; // this is level 1
+    Level2 lvl2; // this is level 2
     TutorialPanel Tutorial;//this is the options menu
     CreditsPanel Credits;
     GameOverPanel GameOverScreen;//this is the game over screen
@@ -58,6 +62,10 @@ public class Game {
         lvl1 = new Level1(this);
         //the size for level 1 is set separetly to ensure functionality for the whole level
         lvl1.setPreferredSize(new Dimension(Level1_Width, Level1_Height));
+        
+        lvl2 = new Level2(this);
+        //the size for level 1 is set separetly to ensure functionality for the whole level
+        lvl2.setPreferredSize(new Dimension(Level2_Width, Level2_Height));
 
         Tutorial = new TutorialPanel(this);
         Tutorial.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -70,6 +78,7 @@ public class Game {
 
         gameWindow.getContentPane().add(startScreen, "INTRO");
         gameWindow.getContentPane().add(lvl1, "LVL1");
+        gameWindow.getContentPane().add(lvl2, "LVL2");        
         gameWindow.getContentPane().add(Tutorial, "TUTORIAL");
         gameWindow.getContentPane().add(GameOverScreen, "OVER");
         gameWindow.getContentPane().add(Credits, "CREDITS");
@@ -129,6 +138,11 @@ public class Game {
                 lvl1.reset();
                 cl.show(gameWindow.getContentPane(), "LVL1");
                 lvl1.requestFocus();
+                break;
+            case 4:
+                lvl2.reset();
+                cl.show(gameWindow.getContentPane(), "LVL2");
+                lvl2.requestFocus();
                 break;
             case 5:
                 cl.show(gameWindow.getContentPane(), "OVER");
