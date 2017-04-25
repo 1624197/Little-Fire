@@ -11,6 +11,7 @@ package com.teamecho.levels;
  * @author 1622542
  */
 import com.teamecho.game.Game;
+import com.teamecho.game.objects.Platform;
 import com.teamecho.characters.Player;
 import com.teamecho.characters.Ember;
 import com.teamecho.characters.Enemy;
@@ -47,6 +48,7 @@ public class Level1 extends JPanel implements ActionListener {
     private Ember[] embers;
     private Enemy[] enemies;
     private SpikePit[] spikepit;
+    private Platform[] Platform;
 
     int VIEWPORT_SIZE_X = 800;
     int offsetMaxX = 3600 - VIEWPORT_SIZE_X;
@@ -57,32 +59,37 @@ public class Level1 extends JPanel implements ActionListener {
     public int CurrentCollisionDelay = 0;
     public int MaxCollisionDelay = 30;
 
-    private final int NUMBER_OF_ENEMIES = 10;
+    private final int NUMBER_OF_ENEMIES = 15;
     private final int NUMBER_OF_EMBERS = 15;
-    private final int NUMBER_OF_SPIKEPITS = 15;
+    private final int NUMBER_OF_SPIKEPITS = 10;
+    private final int NUMBER_OF_PLATFORMS = 10;
+    private final int[] PlatformX = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final int[] PlatformY = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final int blockspace = 64;
+    private final int startline = 100;
 
-    private final int GroundLevel = 520;
+    private final int GroundLevel = 552;
 
     public Level1(Game theGame) {
 
         game = theGame;
         thePlayer = new Player();
         thePlayer.setY(GroundLevel);
+        thePlayer.setX(64);
         embers = new Ember[NUMBER_OF_EMBERS];
         enemies = new Enemy[NUMBER_OF_ENEMIES];
         spikepit = new SpikePit[NUMBER_OF_SPIKEPITS];
+        Platform = new Platform[NUMBER_OF_PLATFORMS];
         Random rand = new Random();
 
         int emberX, emberY; // X and Y coordinates for the collectables
         int enemyX, enemyY; // X and Y coordinates for the enemies
         int spikepitX, spikepitY; // X and Y coordinates for the spike pits
-        int maxSpawnHeight = 350; // The maximum height collectables can spawn at
-        int maxEnemySpawnHeight = 500; // The maximum height enemies can spawn at
-      
+
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
             emberX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            emberY = rand.nextInt(GroundLevel - maxSpawnHeight) + maxSpawnHeight; // pick a random Y coordinate
+            emberY = rand.nextInt(GroundLevel) + 1; // pick a random Y coorinate
 
             // Use the overloaded ember constructor to create a new
             // ember object with the X and Y coordinates selected
@@ -92,18 +99,22 @@ public class Level1 extends JPanel implements ActionListener {
 
         // Initialise all Monster Objects
         for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemyX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
-            enemyY = rand.nextInt(GroundLevel - maxEnemySpawnHeight) + maxEnemySpawnHeight;
+            enemyX = startline+(rand.nextInt(3000) + (thePlayer.getX() + 20)); // will ensure that the enemy cannot spawn under the player start position
+            enemyY = rand.nextInt(GroundLevel) - blockspace;
 
             enemies[j] = new Enemy(enemyX, enemyY);
         }
 
         // Initialise all Spike Pits
         for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-            spikepitX = rand.nextInt(3600) + (thePlayer.getX() + 20); //will ensure that the spike pit cannot spawn under the player start position            
-            spikepitY = (GroundLevel - 33);
-                     
+            spikepitX = startline + (rand.nextInt(3000) + (thePlayer.getX() + 20)); //will ensure that the spike pit cannot spawn under the player start position
+            spikepitY = (GroundLevel - blockspace);
+
             spikepit[k] = new SpikePit(spikepitX, spikepitY);
+        }
+
+        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+            Platform[i] = new Platform(startline+(PlatformX[i] * blockspace), GroundLevel-(PlatformY[i] * blockspace));
         }
 
         init();
@@ -112,7 +123,7 @@ public class Level1 extends JPanel implements ActionListener {
 //This is the private init method that we use to set the defaults for the 3. * level.
 //We can call this method to reset the level (if required) - we can't do that
 //with the constructor method - that can only be called once.
-    private void init() {
+    public void init() {
         score = 0;
         health = 100;
         addKeyListener(new TAdapter());
@@ -130,6 +141,7 @@ public class Level1 extends JPanel implements ActionListener {
 
         //Starts the background music
         Sound.play(getClass().getResourceAsStream("/Sounds/music.wav"), true);
+
     }
 
     /**
@@ -169,7 +181,11 @@ public class Level1 extends JPanel implements ActionListener {
         for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
             g.drawImage(spikepit[k].getSprite(), spikepit[k].getX(), spikepit[k].getY(), null);
         }
-
+        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+            
+                g.drawImage(Platform[i].getSprite(), Platform[i].getX(), Platform[i].getY(), null);
+            
+        }
         //Code to draw the score and health on screen
         Font uiFont = new Font("Arial", Font.PLAIN, 14);
         g.setColor(Color.black);
@@ -188,12 +204,23 @@ public class Level1 extends JPanel implements ActionListener {
         Rectangle currentEmberBounds; //this variable will be updated with the bounds of each ember in a loop
         Rectangle currentEnemyBounds;
         Rectangle currentSpikePitBounds;
-
-        if (thePlayer.getY() > GroundLevel) {
+        boolean onground;
+        onground=false;
+        if (thePlayer.getY() > GroundLevel-thePlayer.getSpriteHeight()) {
             thePlayer.Land();
-            thePlayer.setY(GroundLevel);
+            thePlayer.setY(GroundLevel-thePlayer.getSpriteHeight());
+            
         }
-
+        for (int i=0; i< NUMBER_OF_PLATFORMS; i++){
+        if (thePlayer.getY() < Platform[i].getY()&&thePlayer.getY() > (Platform[i].getY()-thePlayer.getSpriteHeight())&& thePlayer.getX()>Platform[i].getX() && thePlayer.getX()<(Platform[i].getX()+Platform[i].getSpriteWidth())) {
+            thePlayer.Land();
+            thePlayer.setY(Platform[i].getY()-thePlayer.getSpriteHeight());
+            onground=true;
+            }
+        }
+        if (onground=false){
+            thePlayer.falling();
+        }
         // Check to see if the player boundary (rectangle) intersects
         // with the ember boundary (i.e. there is a collision)
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
@@ -213,7 +240,7 @@ public class Level1 extends JPanel implements ActionListener {
 
                 if (enemies[j].getVisible() == true) {
                     if (playerBounds.intersects(currentEnemyBounds)) {
-                        health -= 5;
+                        DamagePlayer(5);
                     }
                 }
 
@@ -224,12 +251,20 @@ public class Level1 extends JPanel implements ActionListener {
 
                 if (spikepit[k].getVisible() == true) {
                     if (playerBounds.intersects(currentSpikePitBounds)) {
-                        health -= 5;
+                        DamagePlayer(5);
                     }
                 }
                 CurrentCollisionDelay = MaxCollisionDelay;
             }
         }
+        
+        if(thePlayer.getX()<0){
+            thePlayer.setX(0);
+        }
+        if(thePlayer.getX()>(3600-thePlayer.getSpriteWidth())){
+            thePlayer.setX(3600-thePlayer.getSpriteWidth());
+        }
+        
     }
 
     /**
@@ -333,4 +368,56 @@ public class Level1 extends JPanel implements ActionListener {
         }
 
     }
+
+    private void DamagePlayer(int Damage) {
+        health -= Damage;
+        if (health <= 0) {
+            reset();
+            game.SelectScreen(5);
+        }
+
+    }
+
+    public void reset() {
+        health = 100;
+        thePlayer.setX(64);
+        thePlayer.setY(GroundLevel);
+        thePlayer.Land();
+        score = 0;
+        health = 100;
+
+        Random rand = new Random();
+
+        int emberX, emberY; // X and Y coordinates for the collectables
+        int enemyX, enemyY; // X and Y coordinates for the enemies
+        int spikepitX, spikepitY; // X and Y coordinates for the spike pits
+
+        //Initialise all embers
+        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+            emberX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
+            emberY = rand.nextInt(GroundLevel) + 1; // pick a random Y coorinate
+
+            // Use the overloaded ember constructor to create a new
+            // ember object with the X and Y coordinates selected
+            // and a score value
+            embers[i] = new Ember(emberX, emberY, 30);
+        }
+
+        // Initialise all Monster Objects
+        for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
+            enemyX = rand.nextInt(3600) + (thePlayer.getX() + 20); // will ensure that the enemy cannot spawn under the player start position
+            enemyY = rand.nextInt(GroundLevel) + 1;
+
+            enemies[j] = new Enemy(enemyX, enemyY);
+        }
+
+        // Initialise all Spike Pits
+        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
+            spikepitX = rand.nextInt(3600) + (thePlayer.getX() + 20); //will ensure that the spike pit cannot spawn under the player start position
+            spikepitY = (GroundLevel - blockspace);
+
+            spikepit[k] = new SpikePit(spikepitX, spikepitY);
+        }
+    }
+
 }
