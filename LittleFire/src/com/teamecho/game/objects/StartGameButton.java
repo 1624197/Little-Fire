@@ -13,7 +13,7 @@ public class StartGameButton {
     public StartGameButton() {
         //Starting X and Y coordinates
         x = 100;
-        y = 300;
+        y = 200;
         initButton();
     }
 
@@ -28,7 +28,7 @@ public class StartGameButton {
 
     public void initButton() {
         try {
-            sprite = ImageIO.read(getClass().getResource("/Images/Objects/StartGameButton.png"));
+            sprite = ImageIO.read(getClass().getResource("/Images/Objects/PlayOff.png"));
         } catch (Exception ex) {
             System.err.println("Error loading start button image");
         }
@@ -79,4 +79,26 @@ public class StartGameButton {
     public Rectangle getBounds() {
         return new Rectangle(x, y, spriteWidth, spriteHeight);
     }
+
+    public void setImage(int Select) {
+        switch (Select) {
+            case 1:
+                try {
+            sprite = ImageIO.read(getClass().getResource("/Images/Objects/PlayOff.png"));
+        } catch (Exception ex) {
+            System.err.println("Error loading start button image");
+        }
+                break;
+            case 2:
+                try {
+            sprite = ImageIO.read(getClass().getResource("/Images/Objects/PlayOn.png"));
+        } catch (Exception ex) {
+            System.err.println("Error loading start button image");
+        }
+                break;
+            default:
+        }
+        
+    }
+
 }

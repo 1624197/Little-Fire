@@ -13,7 +13,7 @@ public class OptionMenuButton {
     public OptionMenuButton() {
         //Starting X and Y coordinates
         x = 500;
-        y = 300;
+        y = 200;
         initButton();
     }
 
@@ -78,5 +78,25 @@ public class OptionMenuButton {
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, spriteWidth, spriteHeight);
+    }
+    public void setImage(int Select) {
+        switch (Select) {
+            case 1:
+                try {
+            sprite = ImageIO.read(getClass().getResource("/Images/Objects/PlayOff.png"));
+        } catch (Exception ex) {
+            System.err.println("Error loading start button image");
+        }
+                break;
+            case 2:
+                try {
+            sprite = ImageIO.read(getClass().getResource("/Images/Objects/PlayOn.png"));
+        } catch (Exception ex) {
+            System.err.println("Error loading start button image");
+        }
+                break;
+            default:
+        }
+        
     }
 }
