@@ -102,7 +102,9 @@ public class Player {
     public int getY() {
         return y;
     }
-
+    public void falling() {
+        Jumping = true;
+    }
     /**
      * This method returns the set sprite so that it can be drawn into the game.
      *
