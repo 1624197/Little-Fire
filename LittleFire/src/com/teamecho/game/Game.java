@@ -8,6 +8,7 @@ package com.teamecho.game;
 import com.teamecho.game.screens.StartGamePanel;
 import com.teamecho.game.screens.TutorialPanel;
 import com.teamecho.game.screens.GameOverPanel;
+import com.teamecho.game.screens.GameWinPanel;
 import com.teamecho.game.screens.CreditsPanel;
 import com.teamecho.levels.Level1;
 import com.teamecho.levels.Level2;
@@ -39,6 +40,7 @@ public class Game {
     TutorialPanel Tutorial;//this is the options menu
     CreditsPanel Credits;
     GameOverPanel GameOverScreen;//this is the game over screen
+    GameWinPanel GameWinScreen; //this is the screen on completing the game
 
     public Game() {
         initWindow(); // Call the initWindow method to initialise window properties
@@ -72,6 +74,9 @@ public class Game {
 
         GameOverScreen = new GameOverPanel(this);
         GameOverScreen.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        
+        GameWinScreen = new GameWinPanel(this);
+        GameWinScreen.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 
         Credits = new CreditsPanel(this);
         Credits.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -81,6 +86,7 @@ public class Game {
         gameWindow.getContentPane().add(lvl2, "LVL2");        
         gameWindow.getContentPane().add(Tutorial, "TUTORIAL");
         gameWindow.getContentPane().add(GameOverScreen, "OVER");
+        gameWindow.getContentPane().add(GameWinScreen, "WIN");
         gameWindow.getContentPane().add(Credits, "CREDITS");
     }
 
@@ -109,12 +115,14 @@ public class Game {
          *
          * Screen 3 = Level 1
          *
-         * Screen 4 = Level 2 (Not yet implemented)
+         * Screen 4 = Level 2 
          *
          * screen 5 = Game Over Screen
          *
          * screen 6 = credits screen
          *
+         * screen 7 = game win screen
+         * 
          * Any further Screens added or planned to be added should be added here
          * and adjustments to the above list should be made
          */
@@ -136,6 +144,7 @@ public class Game {
                 break;
             case 3:
                 lvl1.reset();
+                lvl1.start();
                 cl.show(gameWindow.getContentPane(), "LVL1");
                 lvl1.requestFocus();
                 break;
@@ -151,6 +160,10 @@ public class Game {
             case 6:
                 cl.show(gameWindow.getContentPane(), "CREDITS");
                 Credits.requestFocus();
+                break;
+            case 7:
+                cl.show(gameWindow.getContentPane(), "WIN");
+                GameWinScreen.requestFocus();
                 break;
             default:
 

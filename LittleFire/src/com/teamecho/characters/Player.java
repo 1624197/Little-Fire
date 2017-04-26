@@ -28,7 +28,9 @@ public class Player {
 
     //This image represents the character
     private BufferedImage sprite;
-
+    private BufferedImage[] AnimationLeft;
+    private BufferedImage[] AnimationRight;
+    private int framecount = 3;
     //This variable stores the width of the image
     private int spriteWidth;
     //This variable stores the height of the image
@@ -49,9 +51,11 @@ public class Player {
     //these are used to hold if the player is trying to move left and or right
     private boolean MovingRight = false;
     private boolean MovingLeft = false;
-    
+
     private int SpriteChangeDelay = 0;
-    private int ImagePosition=1;
+    private int SpriteChangeDelayMax = 15;
+    private int ImagePosition = 1;
+
     /**
      * Default constructor that sets X and Y coordinates to 10
      */
@@ -66,12 +70,23 @@ public class Player {
      * This method is called to initialise the player
      */
     public void initCharacter() {
-        try {
-            sprite = ImageIO.read(getClass().getResource("/Images/Player_Images/PlayerRunning1.png"));
-        } catch (Exception ex) {
-            System.err.println("Error loading player sprite");
+        AnimationRight = new BufferedImage[framecount];
+        AnimationLeft = new BufferedImage[framecount];
+
+        for (int i = 0; i < framecount; i++) {
+            try {
+                AnimationRight[i] = ImageIO.read(getClass().getResource("/Images/Player_Images/AidenRight" + String.valueOf(i + 1) + ".png"));
+            } catch (Exception ex) {
+                System.err.println("Error loading player sprite right " + String.valueOf(i + 1));
+            }
+            try {
+                AnimationLeft[i] = ImageIO.read(getClass().getResource("/Images/Player_Images/AidenLeft" + String.valueOf(i + 1) + ".png"));
+            } catch (Exception ex) {
+                System.err.println("Error loading player sprite left " + String.valueOf(i + 1));
+            }
         }
 
+        sprite = AnimationRight[0];
         spriteWidth = sprite.getWidth();
         spriteHeight = sprite.getHeight();
     }
@@ -85,29 +100,39 @@ public class Player {
     public int getSpriteHeight() {
         return spriteHeight;
     }
+
     //this is used to forcefully set the x value  from other classes
     public void setX(int newX) {
         x = newX;
     }
+
     //this is used to get the X value of the player character from other clasess
     public int getX() {
         return x;
     }
-    
+
     //this is used to forcefully set the y value  from other classes
     public void setY(int newY) {
         y = newY;
     }
+
     //this is used to get the Y value of the player character from other clasess
     public int getY() {
         return y;
     }
-    public void setdX(int temp) {
-        dX=temp;
+
+    public void setdX() {
+        dX = 0;
     }
+    
+    public int getdY(){
+        return dY;
+    }
+
     public void falling() {
         Jumping = true;
     }
+
     /**
      * This method returns the set sprite so that it can be drawn into the game.
      *
@@ -263,34 +288,44 @@ public class Player {
         // be used for more than 
         dY = 0;
     }
-    
-    
-    public void SpriteChangeDelay(){
+
+    public void Animate() {
         SpriteChangeDelay++;
-        if(SpriteChangeDelay==30){
-            changeSprite();
-        }
-    }
-    public void changeSprite(){
-        switch (ImagePosition) {
-            case 1:
-                try {
-                    sprite = ImageIO.read(getClass().getResource("/Images/Player_Images/PlayerRunning1.png"));
-                } catch (Exception ex) {
-                    System.err.println("Error loading player sprite");
-                }
-                ImagePosition=2;
-                break;
-            case 2:
-                try {
-                    sprite = ImageIO.read(getClass().getResource("/Images/Player_Images/PlayerRunning2.png"));
-                } catch (Exception ex) {
-                    System.err.println("Error loading player sprite");
-                }
-                ImagePosition=1;
-                break;
-            default:
-                
+        if (SpriteChangeDelay == SpriteChangeDelayMax) {
+            switch (ImagePosition) {
+                case 1:
+                    if (dX > 0) {
+                        sprite = AnimationRight[ImagePosition - 1];
+                    } else if (dX == 0) {
+
+                    } else {
+                        sprite = AnimationLeft[ImagePosition - 1];
+                    }
+                    ImagePosition = 2;
+                    break;
+                case 2:
+                    if (dX > 0) {
+                        sprite = AnimationRight[ImagePosition - 1];
+                    } else if (dX == 0) {
+
+                    } else {
+                        sprite = AnimationLeft[ImagePosition - 1];
+                    }
+                    ImagePosition = 3;
+                    break;
+                case 3:
+                    if (dX > 0) {
+                        sprite = AnimationRight[ImagePosition - 1];
+                    } else if (dX == 0) {
+
+                    } else {
+                        sprite = AnimationLeft[ImagePosition - 1];
+                    }
+                    ImagePosition = 1;
+                    break;
+                default:
+            }
+            SpriteChangeDelay = 0;
         }
     }
 }

@@ -31,7 +31,7 @@ import javax.swing.Timer;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.util.Random;
+
 
 /**
  * This panel represents the game world It contains all of the objects that take
@@ -57,27 +57,28 @@ public class Level2 extends JPanel implements ActionListener {
     int offsetMinX = 0;
     int camX = 0;
     int camY = 0;
-
+int right=1;
+    int left=1;
     public int CurrentCollisionDelay = 0;
     public int MaxCollisionDelay = 30;
 
-    private final int NUMBER_OF_ENEMIES = 7;
-    private final int[] EnemyX = {5, 12, 16, 30, 42, 44, 46};
-    private final int[] EnemyY = {8, 1, 1, 3, 6, 1, 7};
-    private final String[] EnemyDirection = {"RIGHT", "UP","LEFT","UP","LEFT","UP", "DOWN"};
-    private final int[] EnemyDistance = {3, 6, 3, 1, 2, 3, 4};
+    private final int NUMBER_OF_ENEMIES = 11;
+    private final int[] EnemyX = {5,8,13,21,22,26,32,40,43,46,49};
+    private final int[] EnemyY = {2,2,5,3,9,3,3,8,4,4,8};
+    private final String[] EnemyDirection = {"UP", "UP", "RIGHT", "UP", "DOWN", "LEFT", "UP", "DOWN", "UP", "UP", "DOWN"};
+    private final int[] EnemyDistance = {4,2,2,6,7,2,5,4,4,4,4};
     private final int NUMBER_OF_EMBERS = 10;
-    private final int[] EmberX = {6, 7, 14, 22, 25, 32, 33, 40, 40, 46};
-    private final int[] EmberY = {3, 1, 5, 2, 7, 5, 4, 2, 8, 3};
-    private final int NUMBER_OF_SPIKEPITS = 10;
-    private final int[] SpikepitX = {11, 17, 24, 25, 27, 34, 39, 40, 48, 49};
-    private final int[] SpikepitY = {1, 1, 1, 6, 1, 1, 6, 1, 1, 1};
-    private final int NUMBER_OF_PLATFORMS = 34;
-    private final int[] PlatformX = {5, 6, 7, 8, 9, 10, 13, 14, 15, 19, 20, 21, 22, 23, 24, 25, 26, 31, 32, 33, 35, 36, 37, 38, 38, 39, 40, 41, 42, 43, 45, 46, 46, 47};
-    private final int[] PlatformY = {1, 2, 3, 4, 4, 4, 4, 4, 3, 1, 2, 3, 4, 4, 5, 5, 5, 1, 2, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 4, 1, 1, 2, 1};
+    private final int[] EmberX = {4,8,12,18,18,23,38,44,47,53};
+    private final int[] EmberY = {6,5,6,3,7,5,8,7,7,8};
+    private final int NUMBER_OF_SPIKEPITS = 31;
+    private final int[] SpikepitX = {5,6,8,12,16,20,22,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53};
+    private final int[] SpikepitY = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    private final int NUMBER_OF_PLATFORMS = 26;
+    private final int[] PlatformX = {3,4,4,4,6,7,9,10,11,13,14,15,24,25,26,27,29,31,33,34,36,39,42,45,48,51};
+    private final int[] PlatformY = {1,1,2,3,3,3,3,3,3,4,4,4,2,2,2,1,3,4,5,5,6,5,5,5,5,6};
 
-    private final int PortalX = 3400;
-    private final int PortalY = 200;
+    private final int PortalX = 53;
+    private final int PortalY = 2;
     private final int blockspace = 64;
     private final int startline = 100;
 
@@ -86,39 +87,8 @@ public class Level2 extends JPanel implements ActionListener {
     public Level2(Game theGame) {
 
         game = theGame;
-        thePlayer = new Player();
-        thePlayer.setY(GroundLevel);
-        thePlayer.setX(64);
-        thePortal = new Portal(startline + PortalX, GroundLevel - PortalY);
-        embers = new Ember[NUMBER_OF_EMBERS];
-        enemies = new Enemy[NUMBER_OF_ENEMIES];
-        spikepit = new SpikePit[NUMBER_OF_SPIKEPITS];
-        Platform = new Platform[NUMBER_OF_PLATFORMS];
-        Random rand = new Random();
-
-        int emberX, emberY; // X and Y coordinates for the collectables
-        int spikepitY; // X and Y coordinates for the spike pits
-
-        //Initialise all embers
-        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            
-            embers[i] = new Ember(startline + (EmberX[i] * blockspace), GroundLevel - (EmberY[i] * blockspace), 30);
-        }
-
-        // Initialise all Monster Objects
-        for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemies[j] = new Enemy(startline + (EnemyX[j] * blockspace), GroundLevel - (EnemyY[j] * blockspace) , EnemyDirection[j] , EnemyDistance[j]*blockspace);
-        }
-
-        // Initialise all Spike Pits
-        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-            spikepit[k] = new SpikePit(startline + (SpikepitX[k] * blockspace), GroundLevel - (SpikepitY[k] * blockspace));
-        }
-
-        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-            Platform[i] = new Platform(startline + (PlatformX[i] * blockspace), GroundLevel - (PlatformY[i] * blockspace));
-        }
-
+        
+        reset();
         init();
     }
     
@@ -214,7 +184,7 @@ public class Level2 extends JPanel implements ActionListener {
 
         }
         for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-            if (thePlayer.getY() < Platform[i].getY() && thePlayer.getY() > (Platform[i].getY() - thePlayer.getSpriteHeight()) && thePlayer.getX() > Platform[i].getX() && thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth())) {
+            if (thePlayer.getY() < Platform[i].getY() && thePlayer.getY() > (Platform[i].getY() - thePlayer.getSpriteHeight()) && thePlayer.getX() > Platform[i].getX() - thePlayer.getSpriteWidth() - 1 && thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth())) {
                 thePlayer.Land();
                 thePlayer.setY(Platform[i].getY() - thePlayer.getSpriteHeight());
                 InAir = 2;
@@ -254,7 +224,7 @@ public class Level2 extends JPanel implements ActionListener {
 
                 if (enemies[j].getVisible() == true) {
                     if (playerBounds.intersects(currentEnemyBounds)) {
-                        DamagePlayer(5);
+                        DamagePlayer(25);
                     }
                 }
 
@@ -265,7 +235,7 @@ public class Level2 extends JPanel implements ActionListener {
 
                 if (spikepit[k].getVisible() == true) {
                     if (playerBounds.intersects(currentSpikePitBounds)) {
-                        DamagePlayer(5);
+                        DamagePlayer(25);
                     }
                 }
                 CurrentCollisionDelay = MaxCollisionDelay;
@@ -274,14 +244,14 @@ public class Level2 extends JPanel implements ActionListener {
 
         if (playerBounds.intersects(thePortal.getBounds())) {
             reset();
-            game.SelectScreen(6);
+            game.SelectScreen(7);
         }
-
+//leftrightcollision
         for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-            if (thePlayer.getX() > (Platform[i].getX() - thePlayer.getSpriteWidth()) && thePlayer.getX() < (Platform[i].getX() - thePlayer.getSpriteWidth()) + 32 && thePlayer.getY() > Platform[i].getY() && thePlayer.getY() < (Platform[i].getY() + Platform[i].getSpriteHeight())) {
+            if (thePlayer.getX() > (Platform[i].getX() - thePlayer.getSpriteWidth()) && thePlayer.getX() < (Platform[i].getX() - thePlayer.getSpriteWidth()) + 32 && thePlayer.getY() >= Platform[i].getY() && thePlayer.getY() <= (Platform[i].getY() + Platform[i].getSpriteHeight())) {
                 thePlayer.setX(Platform[i].getX() - thePlayer.getSpriteWidth());
             }
-            if (thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth()) && thePlayer.getX() > (Platform[i].getX() + Platform[i].getSpriteWidth() - 32) && thePlayer.getY() > Platform[i].getY() && thePlayer.getY() < (Platform[i].getY() + Platform[i].getSpriteHeight())) {
+            if (thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth()) && thePlayer.getX() > (Platform[i].getX() + Platform[i].getSpriteWidth() - 32) && thePlayer.getY() >= Platform[i].getY() && thePlayer.getY() <= (Platform[i].getY() + Platform[i].getSpriteHeight())) {
                 thePlayer.setX(Platform[i].getX() + Platform[i].getSpriteWidth());
             }
         }
@@ -323,7 +293,7 @@ public class Level2 extends JPanel implements ActionListener {
         DoCameraMove();
         DoMovement();
         checkCollisions();
-        //DoAnimate();
+        DoAnimate();
         repaint();
         if (CurrentCollisionDelay > 0) {
             CurrentCollisionDelay--;
@@ -342,10 +312,16 @@ public class Level2 extends JPanel implements ActionListener {
             int move = 0;
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
+                    if(left==1){
                     move = 1;
+                    left=2;
+                    }
                     break;
                 case KeyEvent.VK_RIGHT:
+                    if(right==1){
                     move = 2;
+                    right=2;
+                    }
                     break;
                 case KeyEvent.VK_UP:
                     move = 3;
@@ -363,10 +339,16 @@ public class Level2 extends JPanel implements ActionListener {
             int stop = 0;
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
+                    if(left==2){
                     stop = 1;
+                    left=1;
+                    }
                     break;
                 case KeyEvent.VK_RIGHT:
+                    if(right==2){
                     stop = 2;
+                    right=1;
+                    }
                     break;
 
                 default:
@@ -409,20 +391,26 @@ public class Level2 extends JPanel implements ActionListener {
 
     public void reset() {
         health = 100;
+        thePlayer = new Player();
         thePlayer.setX(64);
         thePlayer.setY(GroundLevel);
         thePlayer.Land();
-        thePlayer.setdX(0);
+        thePlayer.setdX();
         score = 0;
         health = 100;
+        left =1;
+        right=1;
+        thePortal = new Portal(startline + (PortalX*blockspace), GroundLevel - (PortalY*blockspace));
+        embers = new Ember[NUMBER_OF_EMBERS];
+        enemies = new Enemy[NUMBER_OF_ENEMIES];
+        spikepit = new SpikePit[NUMBER_OF_SPIKEPITS];
+        Platform = new Platform[NUMBER_OF_PLATFORMS];
+   
 
-        Random rand = new Random();
-
-        int emberX, emberY; // X and Y coordinates for the collectables
-        int enemyX, enemyY; // X and Y coordinates for the enemies
 
         //Initialise all embers
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+            
             embers[i] = new Ember(startline + (EmberX[i] * blockspace), GroundLevel - (EmberY[i] * blockspace), 30);
         }
 
@@ -431,11 +419,24 @@ public class Level2 extends JPanel implements ActionListener {
             enemies[j] = new Enemy(startline + (EnemyX[j] * blockspace), GroundLevel - (EnemyY[j] * blockspace) , EnemyDirection[j] , EnemyDistance[j]*blockspace);
         }
 
+        // Initialise all Spike Pits
+        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
+            spikepit[k] = new SpikePit(startline + (SpikepitX[k] * blockspace), GroundLevel - (SpikepitY[k] * blockspace));
+        }
+
+        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+            Platform[i] = new Platform(startline + (PlatformX[i] * blockspace), GroundLevel - (PlatformY[i] * blockspace));
+        }
     }
 
     public void DoAnimate() {
         for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
             embers[i].Animate();
         }
+        thePlayer.Animate();
     }
+    
+    
+    
+    
 }

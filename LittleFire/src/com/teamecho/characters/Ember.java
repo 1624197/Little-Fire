@@ -28,7 +28,8 @@ public class Ember {
     private int AnimationDelay = 0;
     private int AnimationDelayMax = 10;
     private BufferedImage sprite;
-
+    private BufferedImage[] Animation;
+    private int framecount=5;
     private int score;
 
     /**
@@ -38,15 +39,17 @@ public class Ember {
         x = newX;
         y = newY;
         score = newScore;
-
+        Animation = new BufferedImage[5];
         isVisible = true;
+        for (int i = 0; i < framecount; i++) {
+            try {
+                Animation[i] = ImageIO.read(getClass().getResourceAsStream("/Images/Ember/Ember" + String.valueOf(i+1) + ".png"));
+            } catch (Exception ex) {
+                System.err.println("Error loading ember sprite");
+            }
 
-        try {
-            sprite = ImageIO.read(getClass().getResourceAsStream("/Images/Ember/Ember1.png"));
-        } catch (Exception ex) {
-            System.err.println("Error loading ember sprite");
         }
-
+        sprite = Animation[0];
         spriteWidth = sprite.getWidth();
         spriteHeight = sprite.getHeight();
     }
@@ -97,51 +100,27 @@ public class Ember {
         if (AnimationDelay == AnimationDelayMax) {
             switch (ImagePosition) {
                 case 1:
-                    try {
-                        sprite = ImageIO.read(getClass().getResource("/Images/Ember/Ember1.png"));
-                    } catch (Exception ex) {
-                        System.err.println("Error loading ember1 sprite");
-                    }
+                    sprite = Animation[0];
                     ImagePosition = 2;
                     break;
                 case 2:
-                    try {
-                        sprite = ImageIO.read(getClass().getResource("/Images/Ember/Ember2.png"));
-                    } catch (Exception ex) {
-                        System.err.println("Error loading ember2 sprite");
-                    }
+                    sprite = Animation[1];
                     ImagePosition = 3;
                     break;
-                    case 3:
-                    try {
-                        sprite = ImageIO.read(getClass().getResource("/Images/Ember/Ember3.png"));
-                    } catch (Exception ex) {
-                        System.err.println("Error loading ember3 sprite");
-                    }
+                case 3:
+                    sprite = Animation[2];
                     ImagePosition = 4;
                     break;
-                    case 4:
-                    try {
-                        sprite = ImageIO.read(getClass().getResource("/Images/Ember/Ember4.png"));
-                    } catch (Exception ex) {
-                        System.err.println("Error loading ember4 sprite");
-                    }
+                case 4:
+                    sprite = Animation[3];
                     ImagePosition = 5;
                     break;
-                    case 5:
-                    try {
-                        sprite = ImageIO.read(getClass().getResource("/Images/Ember/Ember5.png"));
-                    } catch (Exception ex) {
-                        System.err.println("Error loading ember5 sprite");
-                    }
+                case 5:
+                    sprite = Animation[4];
                     ImagePosition = 1;
                     break;
                 default:
-                    try {
-                        sprite = ImageIO.read(getClass().getResource("/Images/Ember/Ember1.png"));
-                    } catch (Exception ex) {
-                        System.err.println("Error loading ember1 sprite");
-                    }
+                    sprite = Animation[0];
                     ImagePosition = 2;
 
             }

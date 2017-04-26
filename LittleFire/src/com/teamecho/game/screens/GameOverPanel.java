@@ -43,7 +43,8 @@ public class GameOverPanel extends JPanel implements MouseListener, MouseMotionL
         } catch (Exception ex) {
             System.err.println("Error Loading Start Game Image");
         }
-
+        MainMenuButton.setX(300);
+        MainMenuButton.setY(520);
         //Make sure the panle has GUI focus
         //So keypresses are registered to this panel
         setFocusable(true);
