@@ -108,6 +108,7 @@ public class GameWinPanel extends JPanel implements MouseListener, MouseMotionLi
     }
     @Override 
     public void mouseMoved(MouseEvent e) {
+        //when the mouse is moved to withing the area of the button the sprite is changed to a highlighted version
             if (e.getX() > MainMenuButton.getX() && e.getX() < (buttonX + MainMenuButton.getSpriteWidth()) && e.getY() > buttonY && e.getY() < (buttonY + MainMenuButton.getSpriteHeight())) {
                     MainMenuButton.setImage(2);
                     

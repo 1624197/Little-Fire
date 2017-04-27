@@ -32,7 +32,6 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.Rectangle;
 
-
 /**
  * This panel represents the game world It contains all of the objects that take
  * part in the game It uses a timer to update every 10ms It uses a keyAdapter to
@@ -57,25 +56,23 @@ public class Level2 extends JPanel implements ActionListener {
     int offsetMinX = 0;
     int camX = 0;
     int camY = 0;
-int right=1;
-    int left=1;
     public int CurrentCollisionDelay = 0;
-    public int MaxCollisionDelay = 30;
+    public int MaxCollisionDelay = 15;
 
     private final int NUMBER_OF_ENEMIES = 11;
-    private final int[] EnemyX = {5,8,13,21,22,26,32,40,43,46,49};
-    private final int[] EnemyY = {2,2,5,3,9,3,3,8,4,4,8};
+    private final int[] EnemyX = {5, 8, 13, 21, 22, 26, 32, 40, 43, 46, 49};
+    private final int[] EnemyY = {2, 2, 5, 3, 9, 3, 3, 8, 4, 4, 8};
     private final String[] EnemyDirection = {"UP", "UP", "RIGHT", "UP", "DOWN", "LEFT", "UP", "DOWN", "UP", "UP", "DOWN"};
-    private final int[] EnemyDistance = {4,2,2,6,7,2,5,4,4,4,4};
+    private final int[] EnemyDistance = {4, 2, 2, 6, 7, 2, 5, 4, 4, 4, 4};
     private final int NUMBER_OF_EMBERS = 10;
-    private final int[] EmberX = {4,8,12,18,18,23,38,44,47,53};
-    private final int[] EmberY = {6,5,6,3,7,5,8,7,7,8};
+    private final int[] EmberX = {4, 8, 12, 18, 18, 23, 38, 44, 47, 53};
+    private final int[] EmberY = {6, 5, 6, 3, 7, 5, 8, 7, 7, 8};
     private final int NUMBER_OF_SPIKEPITS = 31;
-    private final int[] SpikepitX = {5,6,8,12,16,20,22,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53};
-    private final int[] SpikepitY = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    private final int[] SpikepitX = {5, 6, 8, 12, 16, 20, 22, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
+    private final int[] SpikepitY = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     private final int NUMBER_OF_PLATFORMS = 26;
-    private final int[] PlatformX = {3,4,4,4,6,7,9,10,11,13,14,15,24,25,26,27,29,31,33,34,36,39,42,45,48,51};
-    private final int[] PlatformY = {1,1,2,3,3,3,3,3,3,4,4,4,2,2,2,1,3,4,5,5,6,5,5,5,5,6};
+    private final int[] PlatformX = {3, 4, 4, 4, 6, 7, 9, 10, 11, 13, 14, 15, 24, 25, 26, 27, 29, 31, 33, 34, 36, 39, 42, 45, 48, 51};
+    private final int[] PlatformY = {1, 1, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 2, 2, 2, 1, 3, 4, 5, 5, 6, 5, 5, 5, 5, 6};
 
     private final int PortalX = 53;
     private final int PortalY = 2;
@@ -87,11 +84,48 @@ int right=1;
     public Level2(Game theGame) {
 
         game = theGame;
-        
+
         reset();
         init();
     }
-    
+
+    //reset sets all objects and variables to default values or creates new ones
+    public void reset() {
+        health = 100;
+        thePlayer = new Player();
+        thePlayer.setX(64);
+        thePlayer.setY(GroundLevel);
+        thePlayer.Land();
+        thePlayer.setdX();
+        score = 0;
+        health = 100;
+        thePortal = new Portal(startline + (PortalX * blockspace), GroundLevel - (PortalY * blockspace));
+        embers = new Ember[NUMBER_OF_EMBERS];
+        enemies = new Enemy[NUMBER_OF_ENEMIES];
+        spikepit = new SpikePit[NUMBER_OF_SPIKEPITS];
+        Platform = new Platform[NUMBER_OF_PLATFORMS];
+
+        //Initialise all embers
+        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+
+            embers[i] = new Ember(startline + (EmberX[i] * blockspace), GroundLevel - (EmberY[i] * blockspace), 30);
+        }
+
+        // Initialise all Monster Objects
+        for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
+            enemies[j] = new Enemy(startline + (EnemyX[j] * blockspace), GroundLevel - (EnemyY[j] * blockspace), EnemyDirection[j], EnemyDistance[j] * blockspace);
+        }
+
+        // Initialise all Spike Pits
+        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
+            spikepit[k] = new SpikePit(startline + (SpikepitX[k] * blockspace), GroundLevel - (SpikepitY[k] * blockspace));
+        }
+
+        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+            Platform[i] = new Platform(startline + (PlatformX[i] * blockspace), GroundLevel - (PlatformY[i] * blockspace));
+        }
+    }
+
 //This is the private init method that we use to set the defaults for the 3. * level.
 //We can call this method to reset the level (if required) - we can't do that
 //with the constructor method - that can only be called once.
@@ -114,6 +148,186 @@ int right=1;
         //Starts the background music
         Sound.play(getClass().getResourceAsStream("/Sounds/music.wav"), true);
 
+    }
+
+    /**
+     * This method is called in response to the timer firing Every 10ms, this
+     * method will update the state of the game in response to changes such as
+     * key presses and to generate computer movement
+     *
+     * @param ae
+     */
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        /**
+         * The repaint method starts the process of updating the screen -
+         * calling /our version of the paintComponent method, which has the code
+         * for drawing /our characters and objects
+         */
+        DoCameraMove();
+        DoMovement();
+        checkCollisions();
+        DoAnimate();
+        repaint();
+        // this reduces the value of collision delay if it is above 0
+        if (CurrentCollisionDelay > 0) {
+            CurrentCollisionDelay--;
+        }
+    }
+
+    private void DoCameraMove() {
+        /**
+         * this is where the calculations for camera movement are handled only x
+         * is included here as level one does not need to move up or down so
+         * including x would be redundant camX is set to the player's x value it
+         * is then adjusted by how much you can see of the screen to centre it
+         * on the player
+         *
+         *
+         * the camX value is then checked to make sure that it is within the
+         * bounds of the drawn level and adjusted if it is not
+         */
+        camX = thePlayer.getX() - VIEWPORT_SIZE_X / 2;
+        if (camX > offsetMaxX) {
+            camX = offsetMaxX;
+        } else if (camX < offsetMinX) {
+            camX = offsetMinX;
+        }
+
+    }
+
+    /**
+     * This method calls the movement methods on characters and NPCs
+     */
+    public void DoMovement() {
+        thePlayer.updateMove();
+
+        for (int i = 0; i < NUMBER_OF_ENEMIES; i++) {
+            enemies[i].move();
+        }
+    }
+
+    /**
+     * This method will be called to check for collisions
+     */
+    public void checkCollisions() {
+        Rectangle playerBounds = thePlayer.getBounds();//this gets the player's bounds
+        //these variable will be updated with the bounds of each object in a loop
+        Rectangle currentEmberBounds;
+        Rectangle currentEnemyBounds;
+        Rectangle currentSpikePitBounds;
+
+        InAir = 1;
+        //this ckecks to see if the player is lower in the ground than ground level
+        if (thePlayer.getY() > GroundLevel - thePlayer.getSpriteHeight()) {
+            //the player is set to landed and they are moved out of the ground
+            thePlayer.Land();
+            thePlayer.setY(GroundLevel - thePlayer.getSpriteHeight());
+            InAir = 2;
+
+        }
+
+        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+            //this ckecks to see if the player is lower in the block than the blocks y level but higher than the bottom and within the left and right side of the object
+            if (thePlayer.getY() < Platform[i].getY() && thePlayer.getY() > (Platform[i].getY() - thePlayer.getSpriteHeight()) && thePlayer.getX() > Platform[i].getX() - thePlayer.getSpriteWidth() - 1 && thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth())) {
+                //the player is set to landed and they are moved out of the ground
+                thePlayer.Land();
+                thePlayer.setY(Platform[i].getY() - thePlayer.getSpriteHeight());
+                InAir = 2;
+            }
+
+        }
+        //this checks to see if the player is above the ground
+        if (thePlayer.getY() == GroundLevel - thePlayer.getSpriteHeight()) {
+            InAir = 2;
+        }
+        //this checks to see if the player is above any platforms
+        for (int k = 0; k < NUMBER_OF_PLATFORMS; k++) {
+            if (thePlayer.getY() == Platform[k].getY() - thePlayer.getSpriteHeight() && thePlayer.getX() > Platform[k].getX() && thePlayer.getX() < (Platform[k].getX() + Platform[k].getSpriteWidth())) {
+                InAir = 2;
+            }
+        }
+        // if the player is in the air then
+        if (InAir == 1) {
+            thePlayer.falling();
+
+        }
+        // Check to see if the player boundary (rectangle) intersects
+        // with the ember boundary (i.e. there is a collision)
+        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+            if (embers[i].getVisible() == true) {
+                currentEmberBounds = embers[i].getBounds();
+
+                if (playerBounds.intersects(currentEmberBounds) == true) {
+                    score += embers[i].getScore();
+                    embers[i].setVisible(false);
+                }
+            }
+        }
+
+        //this checks to see if the player is able to collide again
+        if (CurrentCollisionDelay <= 0) {
+            //the player is tested to see if they are within either object and does damage accordingly
+            for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
+                currentEnemyBounds = enemies[j].getBounds();
+                if (enemies[j].getVisible() == true) {
+                    if (playerBounds.intersects(currentEnemyBounds)) {
+                        DamagePlayer(25);
+                    }
+                }
+            }
+
+            for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
+                currentSpikePitBounds = spikepit[k].getBounds();
+
+                if (spikepit[k].getVisible() == true) {
+                    if (playerBounds.intersects(currentSpikePitBounds)) {
+                        DamagePlayer(25);
+                    }
+                }
+                //this is used to delay the next collision
+                CurrentCollisionDelay = MaxCollisionDelay;
+            }
+        }
+        // this changes the screen when the player reaches the end of the level
+        if (playerBounds.intersects(thePortal.getBounds())) {
+            reset();
+            game.SelectScreen(4);
+            pause();
+        }
+
+        //this handles the collision for the left and right side of the platforms
+        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+            /**
+             * they check to see if the y value is between the top of the
+             * platform and the bottom and if the player is clipping into the
+             * left or right then forceably places them outside
+             *
+             */
+            if (thePlayer.getX() > (Platform[i].getX() - thePlayer.getSpriteWidth()) && thePlayer.getX() < (Platform[i].getX() - thePlayer.getSpriteWidth()) + 32 && thePlayer.getY() >= Platform[i].getY() && thePlayer.getY() <= (Platform[i].getY() + Platform[i].getSpriteHeight())) {
+                thePlayer.setX(Platform[i].getX() - thePlayer.getSpriteWidth());
+            }
+            if (thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth()) && thePlayer.getX() > (Platform[i].getX() + Platform[i].getSpriteWidth() - 32) && thePlayer.getY() >= Platform[i].getY() && thePlayer.getY() <= (Platform[i].getY() + Platform[i].getSpriteHeight())) {
+                thePlayer.setX(Platform[i].getX() + Platform[i].getSpriteWidth());
+            }
+        }
+
+        //this checks to see if the player has gone outside the level to the left or right, and then sets them to be inside
+        if (thePlayer.getX() < 1) {
+            thePlayer.setX(1);
+        }
+        if (thePlayer.getX() > (3600 - thePlayer.getSpriteWidth())) {
+            thePlayer.setX(3600 - thePlayer.getSpriteWidth());
+        }
+
+    }
+
+    //this causes the animatins to advance in player and ember
+    public void DoAnimate() {
+        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
+            embers[i].Animate();
+        }
+        thePlayer.Animate();
     }
 
     /**
@@ -169,138 +383,6 @@ int right=1;
     }
 
     /**
-     * This method will be called to check for collisions
-     */
-    public void checkCollisions() {
-        Rectangle playerBounds = thePlayer.getBounds();
-        Rectangle currentEmberBounds; //this variable will be updated with the bounds of each ember in a loop
-        Rectangle currentEnemyBounds;
-        Rectangle currentSpikePitBounds;
-        InAir = 1;
-        if (thePlayer.getY() > GroundLevel - thePlayer.getSpriteHeight()) {
-            thePlayer.Land();
-            thePlayer.setY(GroundLevel - thePlayer.getSpriteHeight());
-            InAir = 2;
-
-        }
-        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-            if (thePlayer.getY() < Platform[i].getY() && thePlayer.getY() > (Platform[i].getY() - thePlayer.getSpriteHeight()) && thePlayer.getX() > Platform[i].getX() - thePlayer.getSpriteWidth() - 1 && thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth())) {
-                thePlayer.Land();
-                thePlayer.setY(Platform[i].getY() - thePlayer.getSpriteHeight());
-                InAir = 2;
-            }
-
-        }
-        if (thePlayer.getY() == GroundLevel - thePlayer.getSpriteHeight()) {
-            InAir = 2;
-        }
-
-        for (int k = 0; k < NUMBER_OF_PLATFORMS; k++) {
-            if (thePlayer.getY() == Platform[k].getY() - thePlayer.getSpriteHeight() && thePlayer.getX() > Platform[k].getX() && thePlayer.getX() < (Platform[k].getX() + Platform[k].getSpriteWidth())) {
-                InAir = 2;
-            }
-        }
-
-        if (InAir == 1) {
-            thePlayer.falling();
-
-        }
-        // Check to see if the player boundary (rectangle) intersects
-        // with the ember boundary (i.e. there is a collision)
-        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            if (embers[i].getVisible() == true) {
-                currentEmberBounds = embers[i].getBounds();
-
-                if (playerBounds.intersects(currentEmberBounds) == true) {
-                    score += embers[i].getScore();
-                    embers[i].setVisible(false);
-                }
-            }
-        }
-
-        if (CurrentCollisionDelay <= 0) {
-            for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-                currentEnemyBounds = enemies[j].getBounds();
-
-                if (enemies[j].getVisible() == true) {
-                    if (playerBounds.intersects(currentEnemyBounds)) {
-                        DamagePlayer(25);
-                    }
-                }
-
-            }
-
-            for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-                currentSpikePitBounds = spikepit[k].getBounds();
-
-                if (spikepit[k].getVisible() == true) {
-                    if (playerBounds.intersects(currentSpikePitBounds)) {
-                        DamagePlayer(25);
-                    }
-                }
-                CurrentCollisionDelay = MaxCollisionDelay;
-            }
-        }
-
-        if (playerBounds.intersects(thePortal.getBounds())) {
-            reset();
-            game.SelectScreen(7);
-        }
-//leftrightcollision
-        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-            if (thePlayer.getX() > (Platform[i].getX() - thePlayer.getSpriteWidth()) && thePlayer.getX() < (Platform[i].getX() - thePlayer.getSpriteWidth()) + 32 && thePlayer.getY() >= Platform[i].getY() && thePlayer.getY() <= (Platform[i].getY() + Platform[i].getSpriteHeight())) {
-                thePlayer.setX(Platform[i].getX() - thePlayer.getSpriteWidth());
-            }
-            if (thePlayer.getX() < (Platform[i].getX() + Platform[i].getSpriteWidth()) && thePlayer.getX() > (Platform[i].getX() + Platform[i].getSpriteWidth() - 32) && thePlayer.getY() >= Platform[i].getY() && thePlayer.getY() <= (Platform[i].getY() + Platform[i].getSpriteHeight())) {
-                thePlayer.setX(Platform[i].getX() + Platform[i].getSpriteWidth());
-            }
-        }
-
-        if (thePlayer.getX() < 1) {
-            thePlayer.setX(1);
-        }
-        if (thePlayer.getX() > (3600 - thePlayer.getSpriteWidth())) {
-            thePlayer.setX(3600 - thePlayer.getSpriteWidth());
-        }
-
-    }
-
-    /**
-     * This method calls the movement methods on characters and NPCs
-     */
-    public void DoMovement() {
-        thePlayer.updateMove();
-
-        for (int i = 0; i < NUMBER_OF_ENEMIES; i++) {
-            enemies[i].move();
-        }
-    }
-
-    /**
-     * This method is called in response to the timer firing Every 10ms, this
-     * method will update the state of the game in response to changes such as
-     * key presses and to generate computer movement
-     *
-     * @param ae
-     */
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        /**
-         * The repaint method starts the process of updating the screen -
-         * calling /our version of the paintComponent method, which has the code
-         * for drawing /our characters and objects
-         */
-        DoCameraMove();
-        DoMovement();
-        checkCollisions();
-        DoAnimate();
-        repaint();
-        if (CurrentCollisionDelay > 0) {
-            CurrentCollisionDelay--;
-        }
-    }
-
-    /**
      * This is a private KeyAdapter Class that we use to process keypresses it
      * assigns each keypress a value then sends it to the player class to be
      * translated into movement
@@ -312,18 +394,12 @@ int right=1;
             int move = 0;
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if(left==1){
                     move = 1;
-                    left=2;
-                    }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if(right==1){
                     move = 2;
-                    right=2;
-                    }
                     break;
-                case KeyEvent.VK_UP:
+                case KeyEvent.VK_SPACE:
                     move = 3;
                     break;
 
@@ -339,16 +415,10 @@ int right=1;
             int stop = 0;
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if(left==2){
                     stop = 1;
-                    left=1;
-                    }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if(right==2){
                     stop = 2;
-                    right=1;
-                    }
                     break;
 
                 default:
@@ -357,27 +427,6 @@ int right=1;
             //the key release for jump is not included here as it would have no effect
             thePlayer.stop(stop);
         }
-    }
-
-    private void DoCameraMove() {
-        /**
-         * this is where the calculations for camera movement are handled only x
-         * is included here as level one does not need to move up or down so
-         * including x would be redundant camX is set to the player's x value it
-         * is then adjusted by how much you can see of the screen to centre it
-         * on the player
-         *
-         *
-         * the camX value is then checked to make sure that it is within the
-         * bounds of the drawn level and adjusted if it is not
-         */
-        camX = thePlayer.getX() - VIEWPORT_SIZE_X / 2;
-        if (camX > offsetMaxX) {
-            camX = offsetMaxX;
-        } else if (camX < offsetMinX) {
-            camX = offsetMinX;
-        }
-
     }
 
     private void DamagePlayer(int Damage) {
@@ -389,54 +438,11 @@ int right=1;
 
     }
 
-    public void reset() {
-        health = 100;
-        thePlayer = new Player();
-        thePlayer.setX(64);
-        thePlayer.setY(GroundLevel);
-        thePlayer.Land();
-        thePlayer.setdX();
-        score = 0;
-        health = 100;
-        left =1;
-        right=1;
-        thePortal = new Portal(startline + (PortalX*blockspace), GroundLevel - (PortalY*blockspace));
-        embers = new Ember[NUMBER_OF_EMBERS];
-        enemies = new Enemy[NUMBER_OF_ENEMIES];
-        spikepit = new SpikePit[NUMBER_OF_SPIKEPITS];
-        Platform = new Platform[NUMBER_OF_PLATFORMS];
-   
-
-
-        //Initialise all embers
-        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            
-            embers[i] = new Ember(startline + (EmberX[i] * blockspace), GroundLevel - (EmberY[i] * blockspace), 30);
-        }
-
-        // Initialise all Monster Objects
-        for (int j = 0; j < NUMBER_OF_ENEMIES; j++) {
-            enemies[j] = new Enemy(startline + (EnemyX[j] * blockspace), GroundLevel - (EnemyY[j] * blockspace) , EnemyDirection[j] , EnemyDistance[j]*blockspace);
-        }
-
-        // Initialise all Spike Pits
-        for (int k = 0; k < NUMBER_OF_SPIKEPITS; k++) {
-            spikepit[k] = new SpikePit(startline + (SpikepitX[k] * blockspace), GroundLevel - (SpikepitY[k] * blockspace));
-        }
-
-        for (int i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-            Platform[i] = new Platform(startline + (PlatformX[i] * blockspace), GroundLevel - (PlatformY[i] * blockspace));
-        }
+    public void start() {
+        timer.start();
     }
 
-    public void DoAnimate() {
-        for (int i = 0; i < NUMBER_OF_EMBERS; i++) {
-            embers[i].Animate();
-        }
-        thePlayer.Animate();
+    public void pause() {
+        timer.stop();
     }
-    
-    
-    
-    
 }

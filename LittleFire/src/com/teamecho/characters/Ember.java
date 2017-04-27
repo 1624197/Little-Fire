@@ -19,88 +19,115 @@ import javax.imageio.ImageIO;
  */
 public class Ember {
 
+    // Tis is the current x and y position
     private int x;
     private int y;
+    //this hild the dimension of the currently loaded sprite
     private int spriteWidth;
     private int spriteHeight;
-    private boolean isVisible;
+    //this is used to track wheather the object should be loaded and interacted with or not
+    private boolean isVisible = true;
+    //this is used to track the next position in the animation cycle
     private int ImagePosition = 1;
-    private int AnimationDelay = 0;
+    //this is used to delay the changing of the sprite in the animation
+    private int CurrentAnimationDelay = 0;
+    //this is used to store the amount of frames that it takes for the ember sprite to change
     private int AnimationDelayMax = 10;
+    //this holds the current image for the object
     private BufferedImage sprite;
+    //this is used to store all images in an easily accessable way
     private BufferedImage[] Animation;
-    private int framecount=5;
+    //this is used to hold how many animation frames there are
+    private int framecount = 5;
+    //this holds the score value of the ember
     private int score;
 
     /**
-     * The default constructor that initialises values to suitable defaults
+     * The default constructor that initialises values to suitable defaults it
+     * takes in the desired co-ordinates and desired score value
+     *
+     * @param newX
+     * @param newY
+     * @param newScore
      */
     public Ember(int newX, int newY, int newScore) {
+        //this sets the x,y and score values
         x = newX;
         y = newY;
         score = newScore;
-        Animation = new BufferedImage[5];
-        isVisible = true;
+        //this creates an array of buffred images wit the same size as the number of animation frames
+        Animation = new BufferedImage[framecount];
+        /**
+         * sets the array of buffered images to its own individual image
+         */
         for (int i = 0; i < framecount; i++) {
             try {
-                Animation[i] = ImageIO.read(getClass().getResourceAsStream("/Images/Ember/Ember" + String.valueOf(i+1) + ".png"));
+                /**
+                 * i+1 is used as the value for the images starts at 1 and goes
+                 * to 5, an array is used so the all images onlY need to be
+                 * loaded once
+                 *
+                 */
+                Animation[i] = ImageIO.read(getClass().getResourceAsStream("/Images/Ember/Ember" + String.valueOf(i + 1) + ".png"));
             } catch (Exception ex) {
                 System.err.println("Error loading ember sprite");
             }
 
         }
+        //sets the default value for the sprite
         sprite = Animation[0];
+        //this calculates the current dimensions of  the set image
         spriteWidth = sprite.getWidth();
         spriteHeight = sprite.getHeight();
     }
 
+    //used to get the x value of the sprite to render it in the right location
+    public int getX() {
+        return x;
+    }
+
+    //used to get the y value of the sprite to render it in the right location
+    public int getY() {
+        return y;
+    }
+
+    //used to givethe score value when colided with
+    public int getScore() {
+        return score;
+    }
+
+    //this return the current image for sprite
     public BufferedImage getSprite() {
         return sprite;
     }
 
+    //used to track whether the ember should be rendered/interacted with
+    public boolean getVisible() {
+        return isVisible;
+    }
+
+    //used to get the area of the sprite for collision
     public Rectangle getBounds() {
         Rectangle objectRect = new Rectangle(x, y, spriteWidth, spriteHeight);
         return objectRect;
     }
 
-    public void setX(int newX) {
-        x = newX;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setY(int newY) {
-        y = newY;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setScore(int newScore) {
-        score = newScore;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
+    //these are used to set whether the induvidual ember is to be rendered/ interacted with
     public void setVisible(boolean visible) {
         isVisible = visible;
     }
 
-    public boolean getVisible() {
-        return isVisible;
-    }
-
     public void Animate() {
-        AnimationDelay++;
-        if (AnimationDelay == AnimationDelayMax) {
+        //every time this function is called the current animation delay is incremented
+        CurrentAnimationDelay++;
+        //when the current delay is equal to max the current image value for sprite is changed
+        if (CurrentAnimationDelay == AnimationDelayMax) {
+            //Image position is used to select the next Image to load
             switch (ImagePosition) {
                 case 1:
+                    //the image for sprite is  set to the appropriate value
                     sprite = Animation[0];
+                    //Image position is then set to the next Image to be loaded
                     ImagePosition = 2;
                     break;
                 case 2:
@@ -124,7 +151,8 @@ public class Ember {
                     ImagePosition = 2;
 
             }
-            AnimationDelay = 0;
+            //it is then reset the delay to zero
+            CurrentAnimationDelay = 0;
         }
     }
 }

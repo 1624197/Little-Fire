@@ -7,7 +7,6 @@ package com.teamecho.characters;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 import javax.imageio.ImageIO;
 
 /**
@@ -25,6 +24,12 @@ public class Enemy {
     private int dX; // The enemy x coordinate
     private int dY; // The enemy y coordinate
     private int Movespeed = 2; // The enemy y coordinate
+    /**
+     * start is used to store weather the object is moving towards end x and y
+     * or start x and y, when 1 it is moving towards end and when 2 it is moving
+     * towards start
+     *
+     */
     private int start = 1;
     // displacement from current x coordinate (i.e. how far the x coord has changed 
     // by user interaction
@@ -36,9 +41,10 @@ public class Enemy {
     //This variable stores the height of the image
     private int spriteHeight;
 
-    private int damage = 5;
+    //this stores the direction that the enemy was to to move in
     private int direction;
-    private boolean isVisible;
+    //this is used to track wheather the object should be loaded and interacted with or not
+    private boolean isVisible = true;
 
     /**
      * Default constructor that sets X and Y coordinates to 10
@@ -49,7 +55,7 @@ public class Enemy {
      * @param Distance
      */
     public Enemy(int newX, int newY, String Direction, int Distance) {
-        //Starting X and Y coordinates
+        //this sets the Starting X and Y coordinates and sets the x and y co ordinates to them
         Startx = newX;
         Starty = newY;
         x = Startx;
@@ -57,8 +63,11 @@ public class Enemy {
 
         switch (Direction) {
             case "UP":
+                //this alters the start value for the displacement
                 dY -= 1;
+                //this calculates the end value for the movement
                 Endy = Starty - Distance;
+                //this stores the set direction globaly for other functions
                 direction = 1;
                 break;
             case "DOWN":
@@ -79,7 +88,6 @@ public class Enemy {
             default:
                 System.out.println("error in enemy direction");
         }
-        isVisible = true;
         initEnemy();
     }
 
@@ -88,7 +96,7 @@ public class Enemy {
      */
     public void initEnemy() {
         try {
-            sprite = ImageIO.read(getClass().getResource("/Images/Enemy_Images/EnemyImage1.png"));
+            sprite = ImageIO.read(getClass().getResource("/Images/Enemy_Images/Enemy.png"));
         } catch (Exception ex) {
             System.err.println("Error loading enemy sprite");
         }
@@ -97,20 +105,14 @@ public class Enemy {
         spriteHeight = sprite.getHeight();
     }
 
+    //used to get the x value of the sprite to render it in the right location
     public int getX() {
         return x;
     }
 
+    //used to get the y value of the sprite to render it in the right location
     public int getY() {
         return y;
-    }
-
-    public int getSpriteWidth() {
-        return spriteWidth;
-    }
-
-    public int getSpriteHeight() {
-        return spriteHeight;
     }
 
     /**
@@ -122,16 +124,46 @@ public class Enemy {
         return sprite;
     }
 
-    public void move() {
+    //used to track whether the ember should be rendered/interacted with
+    public boolean getVisible() {
+        return isVisible;
+    }
 
+    //used to get the area of the sprite for collision
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, spriteWidth, spriteHeight);
+    }
+
+    public void move() {
+        /**
+         * this alters the x and y value of the enemy if start = 1 the enemy has
+         * just spawned or has returned to the start x and y values
+         *
+         * if start =2 then the enemy has reached the end position and needs to
+         * return to the start position
+         */
         if (start == 1) {
             y += (dY * Movespeed);
             x += (dX * Movespeed);
         }
+        //as the obect is reversing the displacement calculation is inverted
         if (start == 2) {
             y -= (dY * Movespeed);
             x -= (dX * Movespeed);
         }
+        /**
+         * Direction is set based on the direction that the object is told to go
+         *
+         * 1= up 2= down 3=left and 4=right
+         *
+         * when start is 1 it checks to see if the relevant x,y value has moved
+         * passed the end point then sets start to 2 to make it move back
+         * towards the start point
+         *
+         * when start is 2 it checks to see if the relevant x,y value has moved
+         * passed the start point then sets start to 1 to make it move back
+         * towards the end point
+         */
         switch (direction) {
             case 1:
                 if (start == 1) {
@@ -185,18 +217,6 @@ public class Enemy {
             default:
         }
 
-    }
-
-    public void setVisible(boolean visible) {
-        isVisible = visible;
-    }
-
-    public boolean getVisible() {
-        return isVisible;
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, spriteWidth, spriteHeight);
     }
 
 }

@@ -110,6 +110,7 @@ public class TutorialPanel extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        //when the mouse is moved to withing the area of the button the sprite is changed to a highlighted version
         if (e.getX() > MainMenuButton.getX() && e.getX() < (MainMenuButton.getX() + MainMenuButton.getSpriteWidth()) && e.getY() > MainMenuButton.getY() && e.getY() < (MainMenuButton.getY() + MainMenuButton.getSpriteHeight())){
                 MainMenuButton.setImage(2);
 
