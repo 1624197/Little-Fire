@@ -134,6 +134,7 @@ public class StartGamePanel extends JPanel implements MouseListener, MouseMotion
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        //when the mouse is moved to withing the area of the button the sprite is changed to a highlighted version
         if (e.getX() > StartButton.getX() && e.getX() < (StartButton.getX() + StartButton.getSpriteWidth()) && e.getY() > StartButton.getY() && e.getY() < (StartButton.getY() + StartButton.getSpriteHeight())) {
                 StartButton.setImage(2);
 

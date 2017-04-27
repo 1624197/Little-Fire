@@ -26,16 +26,17 @@ public class Player {
     // by user interaction
     private int dY = 0;
 
-    //This image represents the character
+    //this holds the current image for the object
     private BufferedImage sprite;
+    //this is used to store all images for moving left in an easily accessable way
     private BufferedImage[] AnimationLeft;
+    //this is used to store all images for moving right in an easily accessable way
     private BufferedImage[] AnimationRight;
     private int framecount = 3;
     //This variable stores the width of the image
     private int spriteWidth;
     //This variable stores the height of the image
     private int spriteHeight;
-
     //this caps the fall speed of the player
     private int MaxFallSpeed = 5;
     //this is the initial jump speed of the player
@@ -51,9 +52,11 @@ public class Player {
     //these are used to hold if the player is trying to move left and or right
     private boolean MovingRight = false;
     private boolean MovingLeft = false;
-
+    //this is used to delay the changing of the sprite in the animation
     private int SpriteChangeDelay = 0;
+    //this is used to store the amount of frames that it takes for the ember sprite to change
     private int SpriteChangeDelayMax = 15;
+    //this is used to track the next position in the animation cycle
     private int ImagePosition = 1;
 
     /**
@@ -86,13 +89,30 @@ public class Player {
             }
         }
 
+        //sets the default value for the sprite
         sprite = AnimationRight[0];
+        //this calculates the current dimensions of  the set image
         spriteWidth = sprite.getWidth();
         spriteHeight = sprite.getHeight();
     }
-    //getSpriteWidth and getSpriteHeight are used to let other classes access the 
-    //width and height of the character
 
+    //this is used to get the X value of the player character from other clasess
+    public int getX() {
+        return x;
+    }
+
+    //this is used to get the Y value of the player character from other clasess
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * getSpriteWidth and getSpriteHeight are used to let other classes access
+     * the width and height of the character
+     *
+     *
+     *
+     */
     public int getSpriteWidth() {
         return spriteWidth;
     }
@@ -101,36 +121,23 @@ public class Player {
         return spriteHeight;
     }
 
-    //this is used to forcefully set the x value  from other classes
+    //getdY is used to let other classes access the value of dY
+    public int getdY() {
+        return dY;
+    }
+
+    //this is used to for ably set dX to zero
+    public void setdX() {
+        dX = 0;
+    }
+
+    //these allow the x and y values to be changed by other objects
     public void setX(int newX) {
         x = newX;
     }
 
-    //this is used to get the X value of the player character from other clasess
-    public int getX() {
-        return x;
-    }
-
-    //this is used to forcefully set the y value  from other classes
     public void setY(int newY) {
         y = newY;
-    }
-
-    //this is used to get the Y value of the player character from other clasess
-    public int getY() {
-        return y;
-    }
-
-    public void setdX() {
-        dX = 0;
-    }
-    
-    public int getdY(){
-        return dY;
-    }
-
-    public void falling() {
-        Jumping = true;
     }
 
     /**
@@ -140,6 +147,12 @@ public class Player {
      */
     public BufferedImage getSprite() {
         return sprite;
+    }
+
+    //This gets the area of the player for use in collision checks
+    public Rectangle getBounds() {
+        Rectangle characterRect = new Rectangle(x, y, spriteWidth, spriteHeight);
+        return characterRect;
     }
 
     /**
@@ -197,17 +210,6 @@ public class Player {
                 break;
             default:
                 break;
-        }
-    }
-// this is called when the player initially jumps
-
-    public void Jump() {
-        //this checks to see if the player is already in the air
-        if (Jumping == false) {
-            //this sets the player character to be in the air
-            Jumping = true;
-            //this sets the initial upwards momentum for when the player jumps
-            dY = JumpHeight;
         }
     }
 
@@ -273,11 +275,21 @@ public class Player {
 
         }
     }
-//This gets the area of the player for use in collision checks
 
-    public Rectangle getBounds() {
-        Rectangle characterRect = new Rectangle(x, y, spriteWidth, spriteHeight);
-        return characterRect;
+    // this is called when the player initially jumps
+    public void Jump() {
+        //this checks to see if the player is already in the air
+        if (Jumping == false) {
+            //this sets the player character to be in the air
+            Jumping = true;
+            //this sets the initial upwards momentum for when the player jumps
+            dY = JumpHeight;
+        }
+    }
+
+    //this is used by other objects to set jumping to true, which makes the player fall
+    public void falling() {
+        Jumping = true;
     }
 
     //this is called when the player has landed on top of any object to stop the downward momentum
@@ -290,10 +302,22 @@ public class Player {
     }
 
     public void Animate() {
+        //every time this function is called the current SpriteChangeDelay is incremented
         SpriteChangeDelay++;
+        //when the current delay is equal to max the current image value for sprite is changed
         if (SpriteChangeDelay == SpriteChangeDelayMax) {
+            //Image position is used to select the next Image to load
             switch (ImagePosition) {
                 case 1:
+                    /**
+                     * when dX is more than 0 the player is moving right so the
+                     * right walking animation should be loaded
+                     *
+                     * and vice verse when dX = 0
+                     *
+                     * and then the image position is set to the next image
+                     * position
+                     */
                     if (dX > 0) {
                         sprite = AnimationRight[ImagePosition - 1];
                     } else if (dX == 0) {
@@ -325,6 +349,7 @@ public class Player {
                     break;
                 default:
             }
+            //the SpriteChangeDelay  is then set to 0
             SpriteChangeDelay = 0;
         }
     }
